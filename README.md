@@ -1,11 +1,11 @@
-//////////////////////////////////////////////////////////////
-//                                                          //
-//           HIPS - a.k.a. Hide In Plain Sight              //
-//                                                          //
-//      Steganography tool wich features compression,       //
-// encryption and (almost) non-intrusive hiding techniques. //
-//                                                          //
-//////////////////////////////////////////////////////////////
+--------------------------------------------------------------
+--                                                          --
+--           HIPS - a.k.a. Hide In Plain Sight              --
+--                                                          -- 
+--      Steganography tool wich features compression,       -- 
+-- encryption and (almost) non-intrusive hiding techniques. --
+--                                                          -- 
+--------------------------------------------------------------
 
 DESCRIPTION:
 
