@@ -128,6 +128,7 @@ int main(int argc, char *argv[])
         for (int8_t k = 13; k >= 0; k--)
         {
             text_in_lsb[bit_pos] = 1 & ( (id >> k) );
+            //printB(text_in_lsb[bit_pos]);
             bit_pos++;
         }
         if (res != NULL)
@@ -161,24 +162,24 @@ int main(int argc, char *argv[])
 	for (int i = startAt*imgBpp*8, k = stopAt*imgBpp*8, j = imgWidth*imgHeight*imgBpp; (i < k && i < j);)
 	{
 		rgb = rand_at_most(2);
-		/* change the last bit: http://stackoverflow.com/a/47990/6049386
-		and XOR it with value from the PRNG */
+		/* change the last bit and XOR it with value from the PRNG */
 		switch (rgb)
 		{
 			case 0:
 				printf("r");
 				// first byte from the pixel is R
-				imgRGB[i]   = ((imgRGB[i] ^ ( -text_in_lsb[bit_pos] ^ imgRGB[i] )) & 1) ^ (1 & rand());
+				imgRGB[i] = ( (imgRGB[i] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
+		printB(imgRGB[i]);
 				break;
 			case 1:
 				printf("g");
 				// second byte from the pixel is G
-				imgRGB[i + 8]   = ((imgRGB[i + 8] ^ ( -text_in_lsb[bit_pos] ^ imgRGB[i + 8] )) & 1) ^ (1 & rand());
+				imgRGB[i + 8] = ( (imgRGB[i + 8] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
 				break;
 			case 2:
 				printf("b");
 				// third byte from the pixel is B
-				imgRGB[i + 16]   = ((imgRGB[i + 16] ^ ( -text_in_lsb[bit_pos] ^ imgRGB[i + 16] )) & 1) ^ (1 & rand());
+				imgRGB[i + 16] = ( (imgRGB[i + 16] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
 				break;
 		}
 		bit_pos++;
