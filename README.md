@@ -1,8 +1,15 @@
 #	HIPS - a.k.a. Hide In Plain Sight
 ###	A steganography tool wich features compression, encryption and (almost) non-intrusive hiding techniques.
 
+#### QUICK START:
+- this works only on linux (Windows support is on the way);
+- get this archive: https://github.com/holodon/hips/raw/master/hips_bin.tar.gz
+- start hips_gtk;
+- as input you can use for example jpg, png or bmp image;
+- output can be only png or bmp (as of now).
 
-### UPDATE 25.06.2017
+
+#### UPDATE 25.06.2017
 - some basic gtk+ interface - uses the binaries hips_c and hips_e 
 in the same directory
 - now with added support for png, based on the wonderfull libraries
