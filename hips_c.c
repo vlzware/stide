@@ -169,7 +169,6 @@ int main(int argc, char *argv[])
 				printf("r");
 				// first byte from the pixel is R
 				imgRGB[i] = ( (imgRGB[i] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
-		printB(imgRGB[i]);
 				break;
 			case 1:
 				printf("g");
