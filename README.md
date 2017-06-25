@@ -6,7 +6,7 @@
 - some basic gtk+ interface - uses the binaries hips_c and hips_e 
 in the same directory
 - now with added support for png, based on the wonderfull libraries
-from stb (links above)
+from stb (link below in credits)
 - replaced all fprintf with printf because otherwise the messages
 appear in the gtk+ interface out of order (TODO: fix and use fprintf)
 
@@ -79,7 +79,7 @@ Drawback 5: ~~~No GUI or other fancy stuff. TODO.~~~ See update 25.06.2017
 
 USAGE:
 
-1. get [this archive] (https://github.com/holodon/hips/hips_bin.tar.gz) with the binaries (compiled on slackware 14.2 x64) OR
+1. get this archive: (https://github.com/holodon/hips/raw/master/hips_bin.tar.gz) with the binaries (compiled on slackware 14.2 x64) OR
 
 - compile with (*)
     'make'
