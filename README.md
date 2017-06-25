@@ -8,15 +8,17 @@
 - as input you can use for example jpg, png or bmp image;
 - output can be only png or bmp (as of now).
 
+...
 
-#### UPDATE 25.06.2017
--- some basic gtk+ interface - uses the binaries hips_c and hips_e 
+UPDATE 25.06.2017
+- some basic gtk+ interface - uses the binaries hips_c and hips_e 
 in the same directory
--- now with added support for png, based on the wonderfull libraries
+- now with added support for png, based on the wonderfull libraries
 from stb (link below in credits)
--- replaced all fprintf with printf because otherwise the messages
+- replaced all fprintf with printf because otherwise the messages
 appear in the gtk+ interface out of order (TODO: fix and use fprintf)
 
+...
 
 #### DESCRIPTION:
 
