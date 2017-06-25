@@ -3,25 +3,44 @@
  * A steganography tool with compression, encryption,
  * random and (almost) non-invasive text insertion
  * 
- * made for my CS50 final project but mostly for fun
+ * (originally) made for my CS50 final project but mostly for fun
  * Vladimir Zhelezarov
  * jelezarov.vladimir@gmail.com
  * 
- * hips_c(reate)
- * hide message in a bitmap using compression and encryption
+ * hips_e(xtract)
+ * extracts the hidden text from the steganography image,
+ * decrypting and decompressing it
  * 
- * based on the CS50 pset4 2017
+ * started from the CS50 pset4 2017
  * https://cs50.harvard.edu/
  * also using dictionary (10 000 most common words) from:
  * https://github.com/first20hours/google-10000-english
+ * now using the stb library from here:
+ * https://github.com/nothings/stb/
+ * 
+ * UPDATE 25.06.2017
+ * - some basic gtk+ interface - uses the binaries hips_c and hips_e 
+ * in the same directory
+ * - now with added support for png, based on the wonderfull libraries
+ * from stb (links above)
+ * - replaced all fprintf with printf because otherwise the messages
+ * appear in the gtk+ interface out of order (TODO: fix and use fprintf)
  */
        
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "bmp.h"
 #include "helpers.h"
+
+#define extBMP 1
+#define extPNG 2
+
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image.h"
+#include "stb_image_write.h"
 
 void print_usage();
 
@@ -29,7 +48,7 @@ int main(int argc, char *argv[])
 {
 
 	// check if properly called
-    if ( argc != 4 )
+    if ( argc != 5 )
     {
         print_usage();
 		return 1;
@@ -50,51 +69,25 @@ int main(int argc, char *argv[])
 	printf("Starting at pos: %i\n", startAt);
 
     char *inImage = argv[3];
-    char *outImage = "out.bmp";
-
-    // open image file 
-    FILE *inptr = fopen(inImage, "r");
-    if (inptr == NULL)
-    {
-        fprintf(stderr, "Could not open %s.\n", inImage);
-        return 2;
-    }
+    char *outImage = argv[4];
+    uint8_t outExt = 0;
     
-    // open output image
-    FILE *outptr = fopen(outImage, "w");
-    if (outptr == NULL)
-    {
-        fclose(inptr);
-        fprintf(stderr, "Could not create %s.\n", outImage);
-        return 3;
-    }
+    // check output file type for jpeg or default to png
+    if (strcmp("png", get_filename_ext(outImage)) == 0)
+		outExt = extPNG;
+	else
+		outExt = extBMP;
 
-    // read infile's BITMAPFILEHEADER
-    BITMAPFILEHEADER bf;
-    fread(&bf, sizeof(BITMAPFILEHEADER), 1, inptr);
-
-    // read infile's BITMAPINFOHEADER
-    BITMAPINFOHEADER bi;
-    fread(&bi, sizeof(BITMAPINFOHEADER), 1, inptr);
-
-    // ensure infile is (likely) a 24-bit uncompressed BMP 4.0
-    if (bf.bfType != 0x4d42 || bf.bfOffBits != 54 || bi.biSize != 40 || 
-        bi.biBitCount != 24 || bi.biCompression != 0)
-    {
-        fclose(outptr);
-        fclose(inptr);
-        fprintf(stderr, "Unsupported file format.\n");
-        return 4;
-    }
-
-    // write outfile's BITMAPFILEHEADER
-    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
-
-    // write outfile's BITMAPINFOHEADER
-    fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
-
-    // determine padding for scanlines
-    int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+	// load the input image in memory
+	printf("Loading image...\n");
+	int imgWidth, imgHeight, imgBpp;
+	uint8_t* imgRGB = stbi_load( inImage, &imgWidth, &imgHeight, &imgBpp, 0 );
+	if (imgRGB == NULL || imgBpp < 3)
+	{
+		printf("Could not load %s!\n",inImage);
+		return 2;
+	}
+	printf("Input image loaded\n");
 
     // tokenize the text to hide
     char **text_to_hide = NULL;
@@ -110,11 +103,9 @@ int main(int argc, char *argv[])
     text_in_lsb = malloc( sizeof(uint8_t) * 14 * (count_tokens + 1) );
     if (text_in_lsb == NULL)
     {
-        fprintf(stderr, "Memory error\n");
-        fclose(inptr);
-        fclose(outptr);
+        printf("Memory error\n");
         free(text_to_hide);
-        return 5;
+        return 3;
     }
     
     // temporary variable and position watcher
@@ -127,12 +118,10 @@ int main(int argc, char *argv[])
         sql_get(NULL, text_to_hide[i], &res);
         if (res == NULL)
         {
-            fprintf(stderr, "Token not in the dictionary!\n");
-            fclose(inptr);
-            fclose(outptr);
+            printf("Token not in the dictionary!\n");
             free(text_to_hide);
             free(text_in_lsb);
-            return 6;
+            return 4;
         }
         printf("id found in dictionary: %s\n", res);
         uint16_t id = (uint16_t) atoi(res);
@@ -145,16 +134,17 @@ int main(int argc, char *argv[])
             free(res);
     }
     
-    // add eof (10005)
+    // add eof - position 10005(EOF_HIPS) in the dictionary
     for (int8_t k = 13; k >=0; k--)
     {
         text_in_lsb[bit_pos] = 1 & ( (EOF_HIPS >> k) );
         bit_pos++;
     }
 
-    // position watchers
-    uint32_t pos_in_file = 0;
+    // position watcher
     bit_pos = 0;
+    
+    // random number in [0,1,2]
     uint8_t rgb;
 
     // using 14 bits for every word in the dictionary
@@ -164,66 +154,66 @@ int main(int argc, char *argv[])
     // TODO: disperse the text in the whole file
     uint32_t stopAt = startAt + bits_text;
     
-    // process
+    // process the loaded image first in memory
     printf("Hiding route:  \n");
 
-    // iterate over infile's scanlines
-    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
-    {
-        // iterate over pixels in scanline
-        for (int j = 0; j < bi.biWidth; j++)
-        {
-            // temporary storage
-            RGBTRIPLE triple;
+    // imgRGB is like R(8 bits), G(8 bits), B(8 bits) and evtl. A(8 bits)
+	for (int i = startAt*imgBpp*8, k = stopAt*imgBpp*8, j = imgWidth*imgHeight*imgBpp; (i < k && i < j);)
+	{
+		rgb = rand_at_most(2);
+		/* change the last bit: http://stackoverflow.com/a/47990/6049386
+		and XOR it with value from the PRNG */
+		switch (rgb)
+		{
+			case 0:
+				printf("r");
+				// first byte from the pixel is R
+				imgRGB[i]   = ((imgRGB[i] ^ ( -text_in_lsb[bit_pos] ^ imgRGB[i] )) & 1) ^ (1 & rand());
+				break;
+			case 1:
+				printf("g");
+				// second byte from the pixel is G
+				imgRGB[i + 8]   = ((imgRGB[i + 8] ^ ( -text_in_lsb[bit_pos] ^ imgRGB[i + 8] )) & 1) ^ (1 & rand());
+				break;
+			case 2:
+				printf("b");
+				// third byte from the pixel is B
+				imgRGB[i + 16]   = ((imgRGB[i + 16] ^ ( -text_in_lsb[bit_pos] ^ imgRGB[i + 16] )) & 1) ^ (1 & rand());
+				break;
+		}
+		bit_pos++;
+		i += imgBpp*8;
+	}
 
-            // read RGB triple from infile
-            fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+	// save the processes image to file
+	if (outExt == extPNG)
+	{
+		if ( !stbi_write_png(outImage, imgWidth, imgHeight, imgBpp, imgRGB, imgWidth*imgBpp) )
+		{
+			printf("Could not write %s!\n", outImage);
+			stbi_image_free(imgRGB);
+			free(text_to_hide);
+			free(text_in_lsb);
+			return 5;
+		}		
+	}
+	// defaults to bmp
+	else
+	{
+		if ( !stbi_write_bmp(outImage, imgWidth, imgHeight, imgBpp, imgRGB) )
+		{
+			printf("Could not write %s!\n", outImage);
+			stbi_image_free(imgRGB);
+			free(text_to_hide);
+			free(text_in_lsb);
+			return 6;
+		}
+	}
 
-            // embed the text in the apropriate LSB
-            if ( (pos_in_file >= startAt) && (pos_in_file < stopAt) )
-            {
-                rgb = rand_at_most(2);
-                switch (rgb)
-                {
-                    case 0:
-                        printf("r");
-                        /* change the last bit: http://stackoverflow.com/a/47990/6049386
-                        and XOR it with value from the PRNG */
-                        triple.rgbtRed   = ((triple.rgbtRed   ^ ( -text_in_lsb[bit_pos] ^ triple.rgbtRed   )) & 1) ^ (1 & rand());
-                        break;
-                    case 1:
-                        printf("g");
-                        triple.rgbtGreen = ((triple.rgbtGreen ^ ( -text_in_lsb[bit_pos] ^ triple.rgbtGreen )) & 1) ^ (1 & rand());
-                        break;
-                    case 2:
-                        printf("b");
-                        triple.rgbtBlue  = ((triple.rgbtBlue  ^ ( -text_in_lsb[bit_pos] ^ triple.rgbtBlue  )) & 1) ^ (1 & rand());
-                        break;
-                }
-                bit_pos++;
-            }
-            
-            // copy RGB triple to outfile
-            fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
-            
-            pos_in_file++;
-        }
-
-        // skip over padding, if any
-        fseek(inptr, padding, SEEK_CUR);
-
-        // then add it back
-        for (int k = 0; k < padding; k++)
-        {
-            fputc(0x00, outptr);
-        }
-    }
-    
     printf("\n\nDone!\n");
 
     // clear memory
-    fclose(inptr);
-    fclose(outptr);
+    stbi_image_free(imgRGB);
     free(text_to_hide);
     free(text_in_lsb);
 
@@ -236,6 +226,6 @@ int main(int argc, char *argv[])
  */
 void print_usage()
 {
-    fprintf(stderr, "Usage:\n");
-    fprintf(stderr, "./hips_c password text image\n");
+    printf("Usage:\n");
+    printf("./hips_c password text imageIn imageOut.[jpg]\n");
 }

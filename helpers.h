@@ -1,6 +1,8 @@
 /**
  * Helper functions for the H.I.P.S. steganography tool
  */
+
+// the end of the dictionary
 #define EOF_HIPS 10005
 
 /**
@@ -35,3 +37,9 @@ uint8_t sql_get (char *id, char *word, char **res);
  * prints num in binary
  */
 void printB(uint8_t num);
+
+/**
+ * returns the file extension
+ * https://stackoverflow.com/a/5309508/6049386
+ */
+const char *get_filename_ext(const char *filename);

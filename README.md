@@ -2,6 +2,14 @@
 ###	A steganography tool wich features compression, encryption and (almost) non-intrusive hiding techniques.
 
 
+### UPDATE 25.06.2017
+- some basic gtk+ interface - uses the binaries hips_c and hips_e 
+in the same directory
+- now with added support for png, based on the wonderfull libraries
+from stb (links above)
+- replaced all fprintf with printf because otherwise the messages
+appear in the gtk+ interface out of order (TODO: fix and use fprintf)
+
 
 DESCRIPTION:
 
@@ -55,7 +63,7 @@ Thanks to the above mentioned techniques, we can achieve really small footprint,
 (words+1)x14 pixels, which is almost nothing. Additionally, calculating the starting pixel from the password, the only 
 additional bits of info we write into the file is our EOF (also 14 bits).
 
-A BMP image consist pixels, which in turn are described by three 8-bit color values - Reg, Green and Blue. We hide our message
+Every image consists of pixels, which in turn are described by three 8-bit color values - Reg, Green and Blue. We hide our message
 only in one bit of each pixel, choosing randomly between R, G and B. This leads to nicely dispersed randomness, which is very
 difficult to detect.
 
@@ -64,24 +72,28 @@ In the next updates we plan to disperse the information evenly through the whole
 
 .....
 
-Drawback 4: As of now, only uncompressed BMP are supported. TODO.
+Drawback 4: ~~~As of now, only uncompressed BMP are supported. TODO.~~~ See update 25.06.2017
 
-Drawback 5: No GUI or other fancy stuff. TODO.
+Drawback 5: ~~~No GUI or other fancy stuff. TODO.~~~ See update 25.06.2017
 
 
 USAGE:
 
+1. get [this archive] (https://github.com/holodon/hips/hips_bin.tar.gz) with the binaries (compiled on slackware 14.2 x64) OR
+
 - compile with (*)
     'make'
-    This creates hips_c and hips_e. The dictionary is already inserted into an hips.db as SQL database, but the text version 
+    This creates hips_c, hips_e and hips_gtk. The dictionary is already inserted into an hips.db as SQL database, but the text version 
     muw.dict is also provided for your convenience.
 
-- create a steganography image with hidden text with: (*)
+2. click on hips_gtk OR
+
+-- create a steganography image with hidden text with: (*)
     './hips_c password "text text text" image'
     Please note: all punctuation gets automatically disgarded, and it will fail if some of the words are not in the dictionary.
     If succesfull outputs 'out.bmp'
 
-- extract the hidden text from the image: (*)
+-- extract the hidden text from the image: (*)
     './hips_e password image'
     It outputs everything what it finds in the terminal, stopping when it reads hips_eof. 
     Note: if there is nothing hidden in the file, the output can be long -
@@ -94,11 +106,14 @@ USAGE:
 	Note: Do not forget to include 'gcc-core', 'libsqlite3' and 'libsqlite3-devel' during the installation process.
 	After installation, navigate in the cygwin terminal to the directory where you have HIPS and then proceed like above.
 	For example - In Windows 7 your 'Desktop' is at '/cygdrive/c/Users/--your-username--/Desktop/'
+	TODO: cross-compile binaries for windows
 
 	
 CREDITS:
 
-- This tool was made as my final project in CS50 (https://www.edx.org/course/introduction-computer-science-harvardx-cs50x).
+- HIPS uses the stb_image and stb_image_write libraries from: https://github.com/nothings/stb/
+
+- This tool was (originally) made as my final project in CS50 (https://www.edx.org/course/introduction-computer-science-harvardx-cs50x).
 It uses some CS50 code from pset4/2017, created by David J. Malan of Harvard University released under CC license 
 (Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported License)
 
@@ -115,7 +130,6 @@ DISCLAIMER:
 2. I am not a native english speaker so there may be mispellings and errors.
 
 
-
-22.05.2017
+last updated: 25.06.2017
 Vladimir Zhelezarov
 jelezarov.vladimir@gmail.com

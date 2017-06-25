@@ -194,7 +194,21 @@ uint8_t sql_get (char *id, char *word, char **res)
    return 0;
 }
 
+/**
+ * prints num in binary
+ */
 void printB(uint8_t num)
 {
     printf(BYTE_TO_BINARY_PATTERN"\n", BYTE_TO_BINARY(num));
+}
+
+/**
+ * returns the file extension
+ * https://stackoverflow.com/a/5309508/6049386
+ */
+const char *get_filename_ext(const char *filename)
+{
+    const char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return "";
+    return dot + 1;
 }
