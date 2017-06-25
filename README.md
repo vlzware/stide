@@ -9,7 +9,7 @@
 - output can be only png or bmp (as of now).
 
 
-UPDATE 25.06.2017
+#### UPDATE 25.06.2017
 -- some basic gtk+ interface - uses the binaries hips_c and hips_e 
 in the same directory
 -- now with added support for png, based on the wonderfull libraries
@@ -18,7 +18,7 @@ from stb (link below in credits)
 appear in the gtk+ interface out of order (TODO: fix and use fprintf)
 
 
-DESCRIPTION:
+#### DESCRIPTION:
 
 Let us suppose you want to communicate with someone over an insecure medium (like, uhm ... internet). The first choice would be 
 maybe an encrypted connection, but one problem with it is that ... well it looks like encrypted connection.
