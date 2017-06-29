@@ -12,6 +12,7 @@
 
 Please note: the used png compression is not optimal (I am working on it) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. HIPS adds --nothing-- to the file just changes some bits.
+In numbers - our example cat.png grows from 66 to 85 kB.
 
 ...
 
