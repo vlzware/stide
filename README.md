@@ -112,7 +112,7 @@ USAGE:
     Note: if there is nothing hidden in the file, the output can be long -
     after all each 14 bits in every image represent some number ;)
 
-- Also provided is some simple picture 'cat,jpg' (taken from http://www.freeimages.com) which you can use for testing.
+- Also provided is some simple picture 'cat.png' (taken from http://www.freeimages.com) which you can use for testing.
 
 (*) If you are using Windows you cannot compile C or use SQL out-of-the-box. 
 	One way to get it all working is installing CYGWIN (https://cygwin.com/install.html).
