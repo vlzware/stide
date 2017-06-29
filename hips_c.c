@@ -1,5 +1,5 @@
 /**
- * HIPS a.k.a. Hide In Plain Sight
+ * H.I.P.S. a.k.a. Hide In Plain Sight
  * A steganography tool with compression, encryption,
  * random and (almost) non-invasive text insertion
  * 
@@ -17,6 +17,11 @@
  * https://github.com/first20hours/google-10000-english
  * now using the stb library from here:
  * https://github.com/nothings/stb/
+ * 
+ * UPDATE 29.06.2017
+ * - reworked hiding algorithm - now we use the whole file and disperse
+ * the bits in randomly (password dependent) choosen order among all colors
+ * of all pixels - see out_20-tokens-distribution.png
  * 
  * UPDATE 25.06.2017
  * - some basic gtk+ interface - uses the binaries hips_c and hips_e 
@@ -54,19 +59,11 @@ int main(int argc, char *argv[])
 		return 1;
     }
 
-	// TODO: calculate freeS from the bitmap's
-	// remaining free space after inserting the text
-	uint16_t freeS = 100;
-
 	// seed using hash from the password
 	uint32_t passI = hash(argv[1]);
 	srand(passI);
 	
-	// starting position of the embedded text
-	uint16_t startAt = rand_at_most(freeS);
-	
 	printf("Hashed pass: %u\n",passI);
-	printf("Starting at pos: %i\n", startAt);
 
     char *inImage = argv[3];
     char *outImage = argv[4];
@@ -80,7 +77,7 @@ int main(int argc, char *argv[])
 
 	// load the input image in memory
 	printf("Loading image...\n");
-	int imgWidth, imgHeight, imgBpp;
+	int imgWidth, imgHeight, imgBpp, imgPixels;
 	uint8_t* imgRGB = stbi_load( inImage, &imgWidth, &imgHeight, &imgBpp, 0 );
 	if (imgRGB == NULL || imgBpp < 3)
 	{
@@ -88,6 +85,12 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 	printf("Input image loaded\n");
+	
+	// calculate pixel count
+	imgPixels = imgWidth * imgHeight;
+
+	// create the pixel-index array and shuffle it
+	uint32_t* pixelArray = shuffle(imgPixels);
 
     // tokenize the text to hide
     char **text_to_hide = NULL;
@@ -97,15 +100,29 @@ int main(int argc, char *argv[])
     printf("Tokenizing input: ");
     printf("found %d tokens.\n", count_tokens);
 
+    // using 14 bits for every word in the dictionary and for EOF
+    uint32_t bits_text = (count_tokens + 1) * 14;
+    printf("bits_text: %i\n",bits_text);
+    
+	// text + EOF too long?
+	if ( bits_text > imgPixels )
+	{
+		printf("The input is too long for the given image!\nExiting\n");
+		free(text_to_hide);
+		free(pixelArray);
+		return 3;
+	}
+
     /* create array with (count + eof)  * 14 * 1111111x ints
     where x is the next bit from the text to hide */
     uint8_t *text_in_lsb;
-    text_in_lsb = malloc( sizeof(uint8_t) * 14 * (count_tokens + 1) );
+    text_in_lsb = malloc( sizeof(uint8_t) * bits_text );
     if (text_in_lsb == NULL)
     {
         printf("Memory error\n");
         free(text_to_hide);
-        return 3;
+        free(pixelArray);
+        return 4;
     }
     
     // temporary variable and position watcher
@@ -121,7 +138,8 @@ int main(int argc, char *argv[])
             printf("Token not in the dictionary!\n");
             free(text_to_hide);
             free(text_in_lsb);
-            return 4;
+			free(pixelArray);
+            return 5;
         }
         printf("id found in dictionary: %s\n", res);
         uint16_t id = (uint16_t) atoi(res);
@@ -144,48 +162,48 @@ int main(int argc, char *argv[])
 
     // position watcher
     bit_pos = 0;
-    
-    // random number in [0,1,2]
-    uint8_t rgb;
 
-    // using 14 bits for every word in the dictionary
-    uint32_t bits_text = (count_tokens + 1) * 14;
-    printf("bits_text: %i\n",bits_text);
-    
-    // TODO: disperse the text in the whole file
-    uint32_t stopAt = startAt + bits_text;
-    
     // process the loaded image first in memory
-    printf("Hiding route:  \n");
+    printf("Hiding route (pixel/channel:  \n");
 
-    // imgRGB is like R(8 bits), G(8 bits), B(8 bits) and evtl. A(8 bits)
-	for (int i = startAt*imgBpp*8, k = stopAt*imgBpp*8, j = imgWidth*imgHeight*imgBpp; (i < k && i < j);)
+	// embed the text
+	uint32_t pos;
+	uint8_t rgb;
+	for (uint16_t i = 0; i < bits_text; i++)
 	{
+		printf("%i",pixelArray[i]);
+		pos = (imgBpp == 3)? (pixelArray[i]*3) : (pixelArray[i]*4);
+
+		// calculate channel
 		rgb = rand_at_most(2);
-		/* change the last bit and XOR it with value from the PRNG */
+
+		// embed and xor with random number
+		imgRGB[pos + rgb] = ( (imgRGB[pos + rgb] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
+
 		switch (rgb)
 		{
 			case 0:
-				printf("r");
-				// first byte from the pixel is R
-				imgRGB[i] = ( (imgRGB[i] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
+				printf("r  ");
 				break;
 			case 1:
-				printf("g");
-				// second byte from the pixel is G
-				imgRGB[i + 8] = ( (imgRGB[i + 8] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
+				printf("g  ");
 				break;
 			case 2:
-				printf("b");
-				// third byte from the pixel is B
-				imgRGB[i + 16] = ( (imgRGB[i + 16] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
+				printf("b  ");
 				break;
-		}
-		bit_pos++;
-		i += imgBpp*8;
-	}
+		}		
+		
+		/*// for testing purposes - shows distribution
+		imgRGB[pos + (rgb + 1)%3] = 0;
+		imgRGB[pos + (rgb + 2)%3] = 0;
+		imgRGB[pos+3] = 255;*/
 
-	// save the processes image to file
+		// advance in the text
+		bit_pos++;
+	}
+	printf("\n");
+
+	// save the processed image to file
 	if (outExt == extPNG)
 	{
 		if ( !stbi_write_png(outImage, imgWidth, imgHeight, imgBpp, imgRGB, imgWidth*imgBpp) )
@@ -194,7 +212,8 @@ int main(int argc, char *argv[])
 			stbi_image_free(imgRGB);
 			free(text_to_hide);
 			free(text_in_lsb);
-			return 5;
+			free(pixelArray);
+			return 6;
 		}		
 	}
 	// defaults to bmp
@@ -206,7 +225,8 @@ int main(int argc, char *argv[])
 			stbi_image_free(imgRGB);
 			free(text_to_hide);
 			free(text_in_lsb);
-			return 6;
+			free(pixelArray);
+			return 7;
 		}
 	}
 
@@ -216,6 +236,7 @@ int main(int argc, char *argv[])
     stbi_image_free(imgRGB);
     free(text_to_hide);
     free(text_in_lsb);
+	free(pixelArray);
 
     // success
     return 0;
@@ -227,5 +248,5 @@ int main(int argc, char *argv[])
 void print_usage()
 {
     printf("Usage:\n");
-    printf("./hips_c password text imageIn imageOut.[jpg]\n");
+    printf("./hips_c password text imageIn imageOut.[png]\n");
 }

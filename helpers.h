@@ -5,6 +5,9 @@
 // the end of the dictionary
 #define EOF_HIPS 10005
 
+// (max 100 tokens incl EOF) * 14
+#define MAX_TOKENS_BITS 1400
+
 /**
  * djb2 hash algorithm by dan bernstein:
  * http://www.cse.yorku.ca/~oz/hash.html
@@ -16,6 +19,12 @@ uint32_t hash(const char *str);
  * http://stackoverflow.com/a/6852396/6049386
  */
 uint16_t rand_at_most(uint16_t max);
+
+/**
+ * Fisher–Yates shuffle
+ * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ */
+uint32_t* shuffle(uint32_t size);
 
 /**
  * Tokenize a string removing all punctuation,

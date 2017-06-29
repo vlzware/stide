@@ -40,24 +40,52 @@ uint32_t hash(const char *str)
 
 /** 
  * Returns random number in the closed interval [0, max]
- * http://stackoverflow.com/a/17554531/6049386
+ * https://stackoverflow.com/a/6852396/6049386
  */
-uint16_t rand_at_most(uint16_t max)
+// Assumes 0 <= max <= RAND_MAX
+// Returns in the closed interval [0, max]
+long rand_at_most(long max) {
+  unsigned long
+    // max <= RAND_MAX < ULONG_MAX, so this is okay.
+    num_bins = (unsigned long) max + 1,
+    num_rand = (unsigned long) RAND_MAX + 1,
+    bin_size = num_rand / num_bins,
+    defect   = num_rand % num_bins;
+
+  long x;
+  do {
+   x = rand();
+  }
+  // This is carefully written not to overflow
+  while (num_rand - defect <= (unsigned long)x);
+
+  // Truncated division is intentional
+  return x/bin_size;
+}
+
+/**
+ * Fisher–Yates shuffle
+ * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ */
+uint32_t* shuffle(uint32_t size)
 {
-    int32_t r;
-    const uint32_t range = 1 + max;
-    const uint32_t buckets = RAND_MAX / range;
-    const uint32_t limit = buckets * range;
-
-    /* Create equal size buckets all in a row, then fire randomly towards
-     * the buckets until you land in one of them. All buckets are equally
-     * likely. If you land off the end of the line of buckets, try again. */
-    do
-    {
-        r = rand();
-    } while (r >= limit);
-
-    return (r / buckets);
+	uint32_t* res;
+	res = (uint32_t*) malloc( sizeof(uint32_t) * size );
+	
+	for (uint32_t i = 0; i < size; i++)
+	{
+		res[i] = i;
+	}
+	uint32_t n,tmp;
+	for (uint32_t i = size -1; i > 0; i--)
+	{
+		n = rand_at_most(i);
+		tmp = res[n];
+		res[n] = res[i];
+		res[i] = tmp;
+	}
+	return res;
+	// do not forget to use free in the caller
 }
 
 /**
@@ -152,7 +180,7 @@ uint8_t sql_get (char *id, char *word, char **res)
    // open database
    rc = sqlite3_open(DATABASE, &db);
    if( rc ){
-      fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+      printf("Can't open database: %s\n", sqlite3_errmsg(db));
       return 1;
    }
 
@@ -165,7 +193,7 @@ uint8_t sql_get (char *id, char *word, char **res)
    // execute SQL statement
    rc = sqlite3_prepare_v2(db, sqlquery, 1000, &stmt, 0);
    if( rc != SQLITE_OK ){
-      fprintf(stderr, "SQL error:\n%s\n", sqlite3_errmsg(db));
+      printf("SQL error:\n%s\n", sqlite3_errmsg(db));
       sqlite3_close(db);
       return 1;
    }
@@ -177,7 +205,7 @@ uint8_t sql_get (char *id, char *word, char **res)
       *res = malloc(sizeof(char) * (strlen((char*)sqlite3_column_text(stmt, 0)) + 1));
       if (res == NULL)
       {
-          fprintf(stderr, "Memory error\n");
+          printf("Memory error\n");
           return 1;
       }
       strcpy(*res, (char*)sqlite3_column_text(stmt, 0));

@@ -1,5 +1,5 @@
 /**
- * HIPS a.k.a. Hide In Plain Sight
+ * H.I.P.S. a.k.a. Hide In Plain Sight
  * A steganography tool with compression, encryption,
  * random and (almost) non-invasive text insertion
  * 
@@ -17,6 +17,11 @@
  * https://github.com/first20hours/google-10000-english
  * now using the stb library from here:
  * https://github.com/nothings/stb/
+ * 
+ * UPDATE 29.06.2017
+ * - reworked hiding algorithm - now we use the whole file and disperse
+ * the bits in randomly (password dependent) choosen order among all colors
+ * of all pixels - see out_20-tokens-distribution.png
  * 
  * UPDATE 25.06.2017
  * - some basic gtk+ interface - uses the binaries hips_c and hips_e 
@@ -40,7 +45,6 @@ void print_usage();
 
 int main(int argc, char *argv[])
 {
-
 	// check if properly called
     if ( argc != 3 )
     {
@@ -48,25 +52,17 @@ int main(int argc, char *argv[])
 		return 1;
     }
 
-	// TODO: calculate freeS from the bitmap
-	// free space in the bitmap after inserting the text
-	uint16_t freeS = 100;
-
 	// seed using hash from the password
 	uint32_t passI = hash(argv[1]);
 	srand(passI);
 	
-	// starting position of the embedded text
-	uint16_t startAt = rand_at_most(freeS);
-	
 	printf("Hashed pass: %u\n",passI);
-	printf("Starting at pos: %i\n", startAt);
 
     char *inImage = argv[2];
 
 	// load the input image in memory
 	printf("Loading image...\n");
-	int imgWidth, imgHeight, imgBpp;
+	int imgWidth, imgHeight, imgBpp, imgPixels;
 	uint8_t* imgRGB = stbi_load( inImage, &imgWidth, &imgHeight, &imgBpp, 0 );
 	if (imgRGB == NULL || imgBpp < 3)
 	{
@@ -75,42 +71,40 @@ int main(int argc, char *argv[])
 	}
 	printf("Input image loaded\n");
 
+	// pixel count
+	imgPixels = imgWidth * imgHeight;
+
+	// create the pixel-index array and shuffle it
+	uint32_t* pixelArray = shuffle(imgPixels);
+
     // temporary variables and buffers
     uint8_t text_in_lsb[14];
     uint8_t bit_pos = 0;
-    uint8_t rgb;
     uint8_t all_read = 0;
     char str[6];
-    char *res;
+    char *res = NULL;
     uint16_t id = 0;
 
-    // process
+    // process and show (bold and blue)
     printf("\nHidden message:\n");
+   	//printf("\033[01;34m"); // not working in the gtk+ window
 
-    // imgRGB is like R(8 bits), G(8 bits), B(8 bits) and evtl. A(8 bits)
-	for (int i = startAt*imgBpp*8, k = imgHeight*imgWidth*imgBpp; i < k;)
+	uint16_t stopAt = (imgPixels > MAX_TOKENS_BITS)? MAX_TOKENS_BITS : imgPixels;
+	uint32_t pos;
+	uint8_t rgb;
+	for (uint16_t i = 0; i < stopAt; i++)
 	{
-		if (all_read == 1)
-			break;
-		rgb = rand_at_most(2);
-		switch (rgb)
-		{
-			case 0:	// R
-//				printf("r");
-				text_in_lsb[bit_pos] = imgRGB[i] ^ (1 & rand());
-				break;
-			case 1:	// G
-//				printf("g");
-				text_in_lsb[bit_pos] = imgRGB[i + 8] ^ (1 & rand());
-				break;
-			case 2:	// B
-//				printf("b");
-				text_in_lsb[bit_pos] = imgRGB[i + 16]  ^ (1 & rand());
-				break;
-		}
-		bit_pos++;
-		i += imgBpp*8;
+		pos = (imgBpp == 3)? (pixelArray[i]*3) : (pixelArray[i]*4);
 
+		// calculate channel
+		rgb = rand_at_most(2);
+
+		// extract and xor with the "random" bit
+		text_in_lsb[bit_pos] = imgRGB[pos + rgb] ^ (1 & rand());
+
+		// advance in the text
+		bit_pos++;
+		
 		// whole word read
 		if (bit_pos == 14)
 		{
@@ -130,17 +124,27 @@ int main(int argc, char *argv[])
 				sprintf(str, "%i", id);
 				sql_get(str, NULL, &res);
 				if (!res)
+				{
+					//printf("\033[01;31m");
 					printf("\n---ID not in the dictionary! Maybe wrong image/password?---\n");
+					//printf("\033[34m");
+				}
 				else
 					printf("%s ",res);
 			}
 		}
+
+		// break if EOF
+		if (all_read)
+			break;
 	}
-    printf("\n");
+   	//printf("\033[00m");
+    printf("\n\nDone!\n");
     
     // free memory
     if (res)
         free(res);
+    free(pixelArray);
     
     // close infile
     stbi_image_free(imgRGB);

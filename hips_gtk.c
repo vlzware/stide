@@ -1,3 +1,7 @@
+/**
+ * Basic GUI for the H.I.P.S. steganography tool
+ */
+
 #include <gtk/gtk.h>
 #include <string.h>
 #include <stdlib.h>
