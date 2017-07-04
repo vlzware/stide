@@ -6,14 +6,14 @@ CC = gcc
 
 # flags to pass compiler
 #CFLAGS = -ggdb3 -O0 -Qunused-arguments -std=c11 -Wall -Werror
-CFLAGS = -ggdb3 -O0 -std=c11 -Wall -Werror
+CFLAGS = -ggdb3 -O0 -Wall -Werror -std=c99 -D_XOPEN_SOURCE=600
 
 # name for executable
 EXE_C = hips_c
 EXE_E = hips_e
 
 # space-separated list of header files
-HDRS = helpers.h stb_image.h stb_image_write.h tiny_jpeg.h
+HDRS = helpers.h stb_image.h stb_image_write.h
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l

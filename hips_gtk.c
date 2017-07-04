@@ -111,7 +111,7 @@ char* get_file()
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		g_print(filename);
+		g_print("%s",filename);
 		g_print("\n");
 	}
 
@@ -129,7 +129,7 @@ void check_fields_c()
 		char *t;
 		asprintf(&t, "./hips_c %s \"%s\" %s %s 2>&1", 
 			gtk_entry_get_text(pass_c), gtk_entry_get_text(text), gtk_entry_get_text(image_c_in), gtk_entry_get_text(image_c_out));
-		g_print(t);
+		g_print("%s",t);
 		g_print("\n");
 		execute(t,0);
 		free(t);
@@ -145,7 +145,7 @@ void check_fields_e()
 	{
 		char *t;
 		asprintf(&t, "./hips_e %s %s 2>&1", gtk_entry_get_text(pass_e), gtk_entry_get_text(image_e));
-		g_print(t);
+		g_print("%s",t);
 		g_print("\n");
 		execute(t,1);
 		free(t);

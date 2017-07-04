@@ -8,6 +8,10 @@
 - as input you can use for example jpg, png or bmp image (like the included cat.png);
 - output can be only png or bmp (as of now).
 
+SECURITY NOTE:
+- Only use unique pictures (i.e. made by you) and use each picture just once with the same password - this adds 
+a lot to the overall security
+
 ...
 
 Please note: the used png compression is not optimal (I am working on it) and this can lead to somewhat bigger output
@@ -99,6 +103,9 @@ USAGE:
     'make'
     This creates hips_c, hips_e and hips_gtk. The dictionary is already inserted into an hips.db as SQL database, but the text version 
     muw.dict is also provided for your convenience.
+    
+    If it complains about sqlite3 or gtk3 install them like this: 
+    sudo apt-get install libsqlite3-dev libgtk-3-dev
 
 2. click on hips_gtk OR
 

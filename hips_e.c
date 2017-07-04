@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 		rgb = rand_at_most(2);
 
 		// extract and xor with the "random" bit
-		text_in_lsb[bit_pos] = imgRGB[pos + rgb] ^ (1 & rand());
+		text_in_lsb[bit_pos] = imgRGB[pos + rgb] ^ (1 & random());
 
 		// advance in the text
 		bit_pos++;

@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 		rgb = rand_at_most(2);
 
 		// embed and xor with random number
-		imgRGB[pos + rgb] = ( (imgRGB[pos + rgb] & ~1) | (text_in_lsb[bit_pos]^ (1 & rand())) );
+		imgRGB[pos + rgb] = ( (imgRGB[pos + rgb] & ~1) | (text_in_lsb[bit_pos]^ (1 & random())) );
 
 		switch (rgb)
 		{
