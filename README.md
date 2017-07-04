@@ -3,7 +3,7 @@
 
 #### QUICK START:
 - this works only on linux (Windows support is on the way);
-- get this archive: https://github.com/holodon/hips/raw/master/hips_bin.tar.gz
+- get this archive: https://github.com/holodon/hips/raw/master/hips_bin_latest.tar.gz
 - extract the archive and then start hips_gtk;
 - as input you can use for example jpg, png or bmp image (like the included cat.png);
 - output can be only png or bmp (as of now).
@@ -97,7 +97,7 @@ difficult to detect.
 
 USAGE:
 
-1. get this archive: (https://github.com/holodon/hips/raw/master/hips_bin.tar.gz) with the binaries (compiled on slackware 14.2 x64) OR
+1. get this archive: (https://github.com/holodon/hips/raw/master/hips_bin_latest.tar.gz) with the binaries (compiled on slackware 14.2 x64) OR
 
 - compile with (*)
     'make'
