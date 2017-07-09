@@ -87,7 +87,7 @@ Tokenizing input: found 9 tokens.
 
 #### 6. Limitations/TODO/planed upgrades?
 * no windows binaries or gui, although you can compile and run all under cygwin
-* png output only
+* outputs only png or bmp
 * the used png compression is not optimal (WIP) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. H.I.P.S. adds --nothing-- to the file just changes some bits.
 In numbers - our example cat.png grows from 66 to 85 kB.
