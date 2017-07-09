@@ -3,7 +3,7 @@
 
 #### QUICK START:
 - this works only on linux (Windows support comes at some point later),
-- get this archive: https://github.com/holodon/hips/raw/master/hips_bin_latest.tar.gz
+- [get this archive](https://github.com/holodon/hips/raw/master/hips_bin_latest.tar.gz)
 - extract the archive and then start hips_gtk,
 - (OR of course clone the repository and compile by yourself just with `make`)
 #### for creating image with embedded secret message:
