@@ -1,6 +1,11 @@
 #	HIPS - a.k.a. Hide In Plain Sight
 ###	A steganography tool wich features compression, encryption and (almost) non-intrusive hiding techniques.
 
+#### Screenshots create:
+<img src="media/create1.png" width="400" alt="embedding secret in some 20x20 white png" /><img src="media/create2.png" width="400" alt="embedding secret in some 20x20 white png" />
+#### Screenshot extract:
+<img src="media/extract.png" width="400" alt="extracting the secret from out.png" />
+
 #### QUICK START:
 - this works only on linux (Windows support comes at some point later),
 - [get this archive](https://github.com/holodon/hips/raw/master/hips_bin_latest.tar.gz)
