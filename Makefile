@@ -6,7 +6,7 @@ CC = gcc
 
 # flags to pass compiler
 #CFLAGS = -ggdb3 -O0 -Qunused-arguments -std=c11 -Wall -Werror
-CFLAGS = -ggdb3 -O0 -Wall -Werror -std=c99 -D_XOPEN_SOURCE=600
+CFLAGS = -g -ggdb3 -O0 -Wall -Werror -std=c99 -D_XOPEN_SOURCE=600
 
 # name for executable
 EXE_C = hips_c
