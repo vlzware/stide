@@ -1,12 +1,8 @@
 /**
- * Helper functions for the H.I.P.S. steganography tool
+ * Helper functions for Stide
  */
 
-// the end of the dictionary
-#define EOF_HIPS 10005
-
-// (max 100 tokens incl EOF) * 14
-#define MAX_TOKENS_BITS 1400
+#include <stdint.h>
 
 /**
  * djb2 hash algorithm by dan bernstein:
@@ -14,7 +10,7 @@
  */
 uint32_t hash(const char *str);
 
-/** 
+/**
  * Returns random number in the closed interval [0, max]
  * http://stackoverflow.com/a/6852396/6049386
  */
