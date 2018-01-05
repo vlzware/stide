@@ -1,5 +1,5 @@
 /**
- * Helper functions for the H.I.P.S. steganography tool
+ * Stide - helper functions
  */
 
 #include <stdio.h>

@@ -1,17 +1,22 @@
+/**
+ * Stide - hiding algorithm
+ */
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "stide.h"
 #include "helpers.h"
 
-void set_bit(uint8_t rgb, uint32_t pos_rgb, uint32_t bit_pos,
-	     uint8_t **text_in_lsb, struct image *img);
+void set_bit(uint8_t rgb, uint32_t pixel, uint32_t bit_pos,
+	     uint8_t **payload, struct image *img);
 void print_channel(uint8_t rgb);
-void make_fat_pixels(uint8_t rgb, uint32_t pos_rgb, struct image *img);
+void make_fat_pixels(uint8_t rgb, uint32_t pixel, struct image *img);
+
 /**
  * Embed the text bits in the image
  */
-int hide(uint32_t * bits_text, uint8_t ** text_in_lsb, struct image *img)
+int hide(uint32_t *bits_text, uint8_t **payload, struct image *img)
 {
 	if (param.debug)
 		printf("Hiding route (pixel/channel):  \n");
@@ -25,13 +30,13 @@ int hide(uint32_t * bits_text, uint8_t ** text_in_lsb, struct image *img)
 	}
 
 	uint8_t rgb;		/* color channel */
-	uint32_t pos_rgb;	/* position in img->rgb */
+	uint32_t pixel;		/* pixel number */
 	uint32_t bit_pos;	/* position in payload */
 	for (bit_pos = 0; bit_pos < (*bits_text); bit_pos++) {
 		if (param.verbose)
 			printf("%i", shuffle_arr[bit_pos]);
 
-		pos_rgb = (img->bpp == 3)
+		pixel = (img->bpp == 3)
 		    ? (shuffle_arr[bit_pos] * 3)
 		    : (shuffle_arr[bit_pos] * 4);
 
@@ -40,10 +45,10 @@ int hide(uint32_t * bits_text, uint8_t ** text_in_lsb, struct image *img)
 
 		if (param.print_dist) {
 			/* make big fat pixels to show distribution */
-			make_fat_pixels(rgb, pos_rgb, img);
+			make_fat_pixels(rgb, pixel, img);
 		} else {
 			/* embed */
-			set_bit(rgb, pos_rgb, bit_pos, text_in_lsb, img);
+			set_bit(rgb, pixel, bit_pos, payload, img);
 		}
 		if (param.verbose)
 			print_channel(rgb);
@@ -56,17 +61,17 @@ int hide(uint32_t * bits_text, uint8_t ** text_in_lsb, struct image *img)
 /**
  * stide's actual hiding algorithm
  */
-void set_bit(uint8_t rgb, uint32_t pos_rgb, uint32_t bit_pos,
-	     uint8_t **text_in_lsb, struct image *img)
+void set_bit(uint8_t rgb, uint32_t pixel, uint32_t bit_pos,
+	     uint8_t **payload, struct image *img)
 {
 	/* position in the rgb array */
-	uint32_t pos = pos_rgb + rgb;
+	uint32_t pos = pixel + rgb;
 
 	/* mask */
 	uint8_t mask = img->rgb[pos] & ~1;
 
 	/* bit to hide xored with a random number */
-	uint8_t bit_xor = (*text_in_lsb)[bit_pos] ^ (1 & random());
+	uint8_t bit_xor = (*payload)[bit_pos] ^ (1 & random());
 
 	/* build */
 	img->rgb[pos] = mask | bit_xor;
@@ -93,13 +98,15 @@ void print_channel(uint8_t rgb)
 /**
  * Make bit fat pixels to show the distribution in a visible way
  */
-void make_fat_pixels(uint8_t rgb, uint32_t pos_rgb, struct image *img)
+void make_fat_pixels(uint8_t rgb, uint32_t pixel, struct image *img)
 {
-	img->rgb[pos_rgb] = 0;
-	img->rgb[pos_rgb + 1] = 0;
-	img->rgb[pos_rgb + 2] = 0;
-	img->rgb[pos_rgb + rgb] = 255;
-	/* deal with alpha channel */
+	img->rgb[pixel] = 0;
+	img->rgb[pixel + 1] = 0;
+	img->rgb[pixel + 2] = 0;
+
+	img->rgb[pixel + rgb] = 255;
+
+	/* deal with alpha channel if any */
 	if (img->bpp == 4)
-		img->rgb[pos_rgb + 3] = 255;
+		img->rgb[pixel + 3] = 255;
 }

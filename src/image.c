@@ -1,5 +1,5 @@
 /**
- * image.c - image processing functions
+ * Stide - image processing functions
  */
 
 #define STB_IMAGE_IMPLEMENTATION

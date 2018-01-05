@@ -1,3 +1,7 @@
+/**
+ * Stide - create mode
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -5,7 +9,7 @@
 
 int prep_strict(uint32_t * b_text, uint8_t ** t_in_lsb, uint32_t pixels);
 int prep_loose(uint32_t * b_text, uint8_t ** t_in_lsb, uint32_t pixels);
-int hide(uint32_t * bits_text, uint8_t ** text_in_lsb, struct image *img);
+int hide(uint32_t * bits_text, uint8_t ** payload, struct image *img);
 int img_save(struct image *img);
 
 /**
@@ -14,34 +18,30 @@ int img_save(struct image *img);
 int create(struct image *img)
 {
 	int res;
-	/*
-	 * create: preprocess the payload
-	 */
-	uint32_t bits_text;	/* text bits counter */
-	uint8_t *text_in_lsb = NULL;	/* payload holder */
+	uint32_t bits_text;		/* text bits counter */
+	uint8_t *payload = NULL;	/* payload holder */
 
-	res = param.strict ? prep_strict(&bits_text, &text_in_lsb, img->pixels)
-	    : prep_loose(&bits_text, &text_in_lsb, img->pixels);
+	/* preprocess the payload */
+	res = param.strict
+	    ? prep_strict(&bits_text, &payload, img->pixels)
+	    : prep_loose(&bits_text, &payload, img->pixels);
 
 	if (res != 0) {
 		img_unload(img);
-		free(text_in_lsb);
+		free(payload);
 		exit(res);
 	}
 
-	/*
-	 * create: process the loaded image in memory
-	 */
-	if ((res = hide(&bits_text, &text_in_lsb, img)) != 0) {
-		free(text_in_lsb);
+	/* process the loaded image in memory */
+	if ((res = hide(&bits_text, &payload, img)) != 0) {
+		free(payload);
 		img_unload(img);
 		exit(res);
 	}
-	free(text_in_lsb);
 
-	/*
-	 * create: save the processed image to file
-	 */
+	free(payload);
+
+	/* save the processed image to file */
 	if ((res = img_save(img)) != 0) {
 		printf("%s: Could not write %s!\n", prog, param.image_out);
 		img_unload(img);

@@ -1,16 +1,14 @@
-# Makefile for Stide
+# Stide - Makefile
 
 # compiler to use
 CC = gcc
 
 # flags to pass compiler
-CFLAGS = -g -ggdb3 -O0 -Wall -Werror -std=c11 -D_XOPEN_SOURCE=600
+CFLAGS = -g -O0 -Wall -Werror -Wextra -pedantic-errors -std=c11 \
+	-D_XOPEN_SOURCE=600
 
 # name for executable
 EXE = stide
-
-# space-separated list of header files
-# HDRS = stide.h helpers.h
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
@@ -26,7 +24,7 @@ OBJS = $(SRCS:.c=.o)
 # default target
 all: stide stide_gtk
 
-stide: $(OBJS) $(HDRS) Makefile
+stide: $(OBJS) Makefile
 	$(CC) $(CFLAGS) -o ../bin/linux/$@ $(OBJS) $(LIBS)
 
 hips_gtk: stide_gtk.c
@@ -38,5 +36,5 @@ $(OBJS): $(HDRS) Makefile
 
 # housekeeping
 clean:
-	rm -f core $(EXE) *.o
+	rm -f core $(EXE) *.o *.gch
 	# rm -f core hips_gtk *.o

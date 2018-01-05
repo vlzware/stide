@@ -27,6 +27,10 @@
 struct parameter param;			/* parameter structure */
 const char *prog = "stide";		/* program name */
 
+/* defaults */
+char def_out[] = "out.png";
+char def_db[] = "stide.db";
+
 void get_switches(int *set_cust_db, int *argc, char **argv[]);
 void get_params(int set_cust_db, int argc, char *argv[]);
 void print_params(void);
@@ -58,7 +62,7 @@ int main(int argc, char *argv[])
 	/* defaults */
 	param.stidedb = NULL;
 	param.pass = NULL;
-	param.payload = NULL;
+	param.msg = NULL;
 	param.image_in = NULL;
 	param.image_out = NULL;
 	param.strict = 1;
@@ -75,33 +79,29 @@ int main(int argc, char *argv[])
 	if (param.debug)
 		print_params();
 
-	/*
-	 * seed using hash from the password
-	 */
+	/* seed using hash from the password */
 	uint32_t pass_hash = hash(param.pass);
 	srand(pass_hash);
 	if (param.verbose)
 		printf("Hashed pass: %u\n\n", pass_hash);
 
-	/*
-	 * load the input image in memory
-	 */
 	if (param.verbose)
 		printf("Loading image...\n");
+
+	/* load the input image in memory */
 	img_load(&img);
 	if (img.rgb == NULL || img.bpp < 3) {
 		printf("%s: Could not load %s!\n", prog, param.image_in);
 		exit(2);
 	}
+
 	/* calculate pixel count */
 	img.pixels = img.width * img.height;
 	if (param.verbose)
 		printf("Input image loaded\n\n");
 	printf("Processing...\n\n");
 
-	/**
-	 * create or extract
-	 */
+	/* create or extract */
 	int res;
 	if (param.mode == CREATE) {
 		if ((res = create(&img)) != 0)
@@ -111,20 +111,16 @@ int main(int argc, char *argv[])
 			exit(res);
 	}
 
-	/*
-	 * housekeeping
-	 */
+	/* housekeeping */
 	img_unload(&img);
 
-	/*
-	 * success
-	 */
+	/* success */
 	printf("\nDone!\n");
 	return 0;
 }
 
 /**
- * Parse the switches from the command line
+ * Parse the command line - switches.
  */
 void get_switches(int *set_cust_db, int *argc, char **argv[])
 {
@@ -166,13 +162,10 @@ void get_switches(int *set_cust_db, int *argc, char **argv[])
 }
 
 /**
- * Parse the command line parameters
+ * Parse the command line - parameters.
  */
 void get_params(int set_cust_db, int argc, char *argv[])
 {
-	char def_out[] = "out.png";
-	char def_db[] = "stide.db";
-
 	if ((param.strict == 0) && (set_cust_db == 1)) {
 		printf("Strict mode is disabled:");
 		printf(" ignoring the dictionary %s\n", argv[0]);
@@ -209,7 +202,7 @@ void get_params(int set_cust_db, int argc, char *argv[])
 			error = 1;
 		}
 		if (error == 0) {
-			param.payload = argv[1 + i];
+			param.msg = argv[1 + i];
 			param.image_in = argv[2 + i];
 		}
 	} else {
@@ -222,13 +215,16 @@ void get_params(int set_cust_db, int argc, char *argv[])
 	}
 }
 
+/**
+ * Print all parameters.
+ */
 void print_params(void)
 {
 	printf("%s parameters:\n", prog);
 	const char *modes[] = {"UNSET", "CREATE", "EXTRACT"};
 	printf("\tmode     : %s\n", modes[param.mode]);
 	printf("\tpassword : %s\n", param.pass);
-	printf("\ttext     : %s\n", param.payload);
+	printf("\ttext     : %s\n", param.msg);
 	printf("\tdict     : %s\n", param.stidedb);
 	printf("\timg_in   : %s\n", param.image_in);
 	printf("\timg_out  : %s\n", param.image_out);
@@ -239,7 +235,7 @@ void print_params(void)
 }
 
 /*
- * print the help and die
+ * Print the help and die.
  */
 void print_usage(void)
 {

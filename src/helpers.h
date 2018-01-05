@@ -1,5 +1,5 @@
 /**
- * Helper functions for Stide
+ * Stide - helper functions
  */
 
 #include <stdint.h>

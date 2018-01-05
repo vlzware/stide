@@ -1,5 +1,5 @@
 /**
- * stide.h - main definitions
+ * Stide - main definitions
  */
 
 #include <stdint.h>
@@ -25,7 +25,7 @@ enum ops {
 struct parameter {		/* parameter structure */
 	char *stidedb;		/* path to stide.db */
 	char *pass;		/* password */
-	char *payload;		/* text to hide */
+	char *msg;		/* text to hide */
 	char *image_in;		/* input image */
 	char *image_out;	/* output image */
 	int strict;		/* strict mode */

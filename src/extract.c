@@ -1,3 +1,7 @@
+/**
+ * Stide - extract mode
+ */
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -12,10 +16,10 @@ int extract(struct image *img)
 	if (shuffle_arr == NULL)
 		return 7;
 
-	printf("\nHidden message:\n");
+	printf("Hidden message:\n");
 
 	/* temporary variables and buffers */
-	uint8_t text_in_lsb[14];
+	uint8_t payload[14];
 	uint8_t bit_pos = 0;
 	int all_read = 0;
 	char str[6];
@@ -36,7 +40,7 @@ int extract(struct image *img)
 		rgb = rand_at_most(2);
 
 		/* extract and xor with the 'random' bit */
-		text_in_lsb[bit_pos] = img->rgb[pos_rgb + rgb] ^ (1 & random());
+		payload[bit_pos] = img->rgb[pos_rgb + rgb] ^ (1 & random());
 
 		/* advance in the text */
 		bit_pos++;
@@ -50,7 +54,7 @@ int extract(struct image *img)
 			int8_t i = WLEN_STRICT - 1;
 			for (; i >= 0; i--) {
 				id ^=
-				    (-(text_in_lsb[WLEN_STRICT - 1 - i] & 1) ^
+				    (-(payload[WLEN_STRICT - 1 - i] & 1) ^
 				     id) & (1 << i);
 			}
 			if (id == EOF_STRICT) {
@@ -69,6 +73,7 @@ int extract(struct image *img)
 		}
 
 	}
+	printf("\n");
 
 	/* housekeeping */
 	free(res);
