@@ -10,7 +10,7 @@ CFLAGS = -g -ggdb3 -O0 -Wall -Werror -std=c11 -D_XOPEN_SOURCE=600
 EXE = stide
 
 # space-separated list of header files
-HDRS = stide.h helpers.h
+# HDRS = stide.h helpers.h
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l

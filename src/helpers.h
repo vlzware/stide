@@ -20,7 +20,7 @@ uint16_t rand_at_most(uint16_t max);
  * Fisher–Yates shuffle
  * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
  */
-uint32_t* shuffle(uint32_t size);
+uint32_t *shuffle(uint32_t size);
 
 /**
  * Tokenize a string removing all punctuation,
@@ -28,7 +28,7 @@ uint32_t* shuffle(uint32_t size);
  * Returns number of tokens
  * Assings the pointer array to the substrings
  */
-uint8_t tokenize (char *str, char ***arr);
+uint8_t tokenize(char *str, char ***arr);
 
 /**
  * Gets id or word from the database
@@ -36,7 +36,7 @@ uint8_t tokenize (char *str, char ***arr);
  * Returns 0 if succesfull, otherwise 1.
  * Points *res to the first found element.
  */
-uint8_t sql_get (char *id, char *word, char **res);
+uint8_t sql_get(char *id, char *word, char **res);
 
 /**
  * prints num in binary
@@ -48,3 +48,5 @@ void printB(uint8_t num);
  * https://stackoverflow.com/a/5309508/6049386
  */
 const char *get_filename_ext(const char *filename);
+
+char parse_ext(char *fname);

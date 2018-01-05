@@ -22,20 +22,21 @@ enum ops {
 	EXTRACT
 };
 
-struct parameter {              /* parameter structure */
-	char *pass;             /* password */
-	char *payload;          /* text to hide */
-	char *image_in;         /* input image */
-	char *image_out;        /* output image */
-	int strict;             /* strict mode */
-	int verbose;            /* be verbose */
-	int debug;              /* print debugging messages */
-	int print_dist;         /* show distribution */
-	char out_ext;           /* file extension */
+struct parameter {		/* parameter structure */
+	char *stidedb;		/* path to stide.db */
+	char *pass;		/* password */
+	char *payload;		/* text to hide */
+	char *image_in;		/* input image */
+	char *image_out;	/* output image */
+	int strict;		/* strict mode */
+	int verbose;		/* be verbose */
+	int debug;		/* print debugging messages */
+	int print_dist;		/* show distribution */
+	char out_ext;		/* file extension */
 	enum ops mode;		/* operation mode */
 };
 
-struct image {  		/* image structure */
+struct image {			/* image structure */
 	int width;
 	int height;
 	int bpp;
