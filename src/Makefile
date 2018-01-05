@@ -31,10 +31,6 @@ hips_gtk: stide_gtk.c
 	gcc -g -D_GNU_SOURCE -rdynamic  `pkg-config --cflags gtk+-3.0` \
 	stide_gtk.c -o ../bin/linux/stide_gtk `pkg-config --libs gtk+-3.0`
 
-# dependencies
-$(OBJS): $(HDRS) Makefile
-
 # housekeeping
 clean:
-	rm -f core $(EXE) *.o *.gch
-	# rm -f core hips_gtk *.o
+	rm -f core $(EXE) *.o
