@@ -6,7 +6,11 @@
 
 void set_bit(uint8_t rgb, uint32_t pos_rgb, uint32_t bit_pos,
 	     uint8_t **text_in_lsb, struct image *img);
-
+void print_channel(uint8_t rgb);
+void make_fat_pixels(uint8_t rgb, uint32_t pos_rgb, struct image *img);
+/**
+ * Embed the text bits in the image
+ */
 int hide(uint32_t * bits_text, uint8_t ** text_in_lsb, struct image *img)
 {
 	if (param.debug)
@@ -36,32 +40,22 @@ int hide(uint32_t * bits_text, uint8_t ** text_in_lsb, struct image *img)
 
 		if (param.print_dist) {
 			/* make big fat pixels to show distribution */
-			img->rgb[pos_rgb + (rgb + 1) % 3] = 0;
-			img->rgb[pos_rgb + (rgb + 2) % 3] = 0;
-			img->rgb[pos_rgb + 3] = 255;
+			make_fat_pixels(rgb, pos_rgb, img);
 		} else {
 			/* embed */
 			set_bit(rgb, pos_rgb, bit_pos, text_in_lsb, img);
 		}
 		if (param.verbose)
-			switch (rgb) {
-			case 0:
-				printf("r  ");
-				break;
-			case 1:
-				printf("g  ");
-				break;
-			case 2:
-				printf("b  ");
-				break;
-			}
+			print_channel(rgb);
 	}
 
 	free(shuffle_arr);
 	return 0;
 }
 
-/* stide's actual hiding algorithm */
+/**
+ * stide's actual hiding algorithm
+ */
 void set_bit(uint8_t rgb, uint32_t pos_rgb, uint32_t bit_pos,
 	     uint8_t **text_in_lsb, struct image *img)
 {
@@ -76,4 +70,36 @@ void set_bit(uint8_t rgb, uint32_t pos_rgb, uint32_t bit_pos,
 
 	/* build */
 	img->rgb[pos] = mask | bit_xor;
+}
+
+/**
+ * Print the current rgb channel
+ */
+void print_channel(uint8_t rgb)
+{
+	switch (rgb) {
+	case 0:
+		printf("r  ");
+		break;
+	case 1:
+		printf("g  ");
+		break;
+	case 2:
+		printf("b  ");
+		break;
+	}
+}
+
+/**
+ * Make bit fat pixels to show the distribution in a visible way
+ */
+void make_fat_pixels(uint8_t rgb, uint32_t pos_rgb, struct image *img)
+{
+	img->rgb[pos_rgb] = 0;
+	img->rgb[pos_rgb + 1] = 0;
+	img->rgb[pos_rgb + 2] = 0;
+	img->rgb[pos_rgb + rgb] = 255;
+	/* deal with alpha channel */
+	if (img->bpp == 4)
+		img->rgb[pos_rgb + 3] = 255;
 }
