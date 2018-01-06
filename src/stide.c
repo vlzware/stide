@@ -47,8 +47,10 @@ void print_usage(void);
  * parameters:
  *  c: 'create' - embed text in image;
  *  e: 'extract' - extract text from image;
- *  s: 'strict' mode - do not work with the dictionary only - embed
- *      arbitrary words/characters;
+ *  s: 'strict' mode - work with dictionary words only - this leads to the
+ *       maximum compression;
+ *       Not enabling 's' is the 'loose' mode - support of arbitrary
+ *       ASCII characters at the cost of compression;
  *  p: print distribution - output the image with fat visible changes;
  *  v: be verbose;
  *  d: be even more verbose;
@@ -63,9 +65,10 @@ int main(int argc, char *argv[])
 	param.stidedb = NULL;
 	param.pass = NULL;
 	param.msg = NULL;
+	param.msg_len = 0;
 	param.image_in = NULL;
 	param.image_out = NULL;
-	param.strict = 1;
+	param.strict = 0;
 	param.verbose = 0;
 	param.debug = 0;
 	param.print_dist = 0;
@@ -79,6 +82,17 @@ int main(int argc, char *argv[])
 	if (param.debug)
 		print_params();
 
+	printf("Starting %s in %s mode.\n", prog,
+		(param.strict == 1) ? "strict":"loose");
+
+	if (param.print_dist) {
+		printf("Note: 'print' mode enabled - %s will hide nothing,",
+			prog);
+		printf(" just show the distribution!\n\n");
+	} else {
+		printf("\n");
+	}
+
 	/* seed using hash from the password */
 	uint32_t pass_hash = hash(param.pass);
 	srand(pass_hash);
@@ -91,31 +105,32 @@ int main(int argc, char *argv[])
 	/* load the input image in memory */
 	img_load(&img);
 	if (img.rgb == NULL || img.bpp < 3) {
-		printf("%s: Could not load %s!\n", prog, param.image_in);
-		exit(2);
+		printf("(!) Could not load %s!\n", param.image_in);
+		exit(1);
 	}
 
 	/* calculate pixel count */
 	img.pixels = img.width * img.height;
 	if (param.verbose)
 		printf("Input image loaded\n\n");
-	printf("Processing...\n\n");
+	printf("Processing...\n");
 
 	/* create or extract */
 	int res;
-	if (param.mode == CREATE) {
-		if ((res = create(&img)) != 0)
-			exit(res);
-	} else if (param.mode == EXTRACT) {
-		if ((res = extract(&img)) != 0)
-			exit(res);
-	}
+	if (param.mode == CREATE)
+		res = create(&img);
+	else if (param.mode == EXTRACT)
+		res = extract(&img);
 
 	/* housekeeping */
 	img_unload(&img);
 
+	if (res)
+		exit(res);
+
 	/* success */
-	printf("\nDone!\n");
+	printf("\n");
+	printf("Done!\n");
 	return 0;
 }
 
@@ -155,7 +170,7 @@ void get_switches(int *set_cust_db, int *argc, char **argv[])
 				*set_cust_db = 1;
 				break;
 			default:
-				printf("%s: illegal option %c\n", prog, c);
+				printf("(!) illegal option %c\n", c);
 				param.mode = UNSET;
 				break;
 			}
@@ -198,11 +213,19 @@ void get_params(int set_cust_db, int argc, char *argv[])
 		} else if ((set_cust_db == 0)
 				&& ((argc == 3) || (argc == 4))) {
 			param.stidedb = def_db;
+			if (argc == 3) {
+				param.image_out = def_out;
+				param.out_ext = extPNG;
+			} else {
+				param.image_out = argv[3];
+				param.out_ext = parse_ext(param.image_out);
+			}
 		} else {
 			error = 1;
 		}
 		if (error == 0) {
 			param.msg = argv[1 + i];
+			param.msg_len = strlen(param.msg);
 			param.image_in = argv[2 + i];
 		}
 	} else {
@@ -224,7 +247,8 @@ void print_params(void)
 	const char *modes[] = {"UNSET", "CREATE", "EXTRACT"};
 	printf("\tmode     : %s\n", modes[param.mode]);
 	printf("\tpassword : %s\n", param.pass);
-	printf("\ttext     : %s\n", param.msg);
+	printf("\tmsg      : %s\n", param.msg);
+	printf("\tmsg len  : %i\n", param.msg_len);
 	printf("\tdict     : %s\n", param.stidedb);
 	printf("\timg_in   : %s\n", param.image_in);
 	printf("\timg_out  : %s\n", param.image_out);
@@ -232,6 +256,7 @@ void print_params(void)
 	printf("\tverbose  : %i\n", param.verbose);
 	printf("\tdebug    : %i\n", param.debug);
 	printf("\tprint_dis: %i\n", param.print_dist);
+	printf("\n");
 }
 
 /*
@@ -242,17 +267,20 @@ void print_usage(void)
 	printf("\nUsage:\n");
 	printf("%s -c[spvdf] [path/to/stide.db] password text ", prog);
 	printf("image-in [image-out[.png]]\n");
-	printf("\tc: create image embedding the hidden text\n");
+	printf("\t-c: create image embedding the hidden text\n");
 	printf("-OR-\n");
 	printf("%s -e[svdf] [path/to/stide.db] password image-in\n", prog);
-	printf("\te: extract hidden text from an image\n");
+	printf("\t-e: extract hidden text from an image\n");
 	printf("\nOptional parameters:\n");
-	printf("\ts: enable strict mode\n");
-	printf("\tv: be verbose\n");
-	printf("\td: be even more verbose (this includes 'v')\n");
-	printf("\tp: print distribution - ");
+	printf("\t-s: enable 'strict' mode - work with dictionary words only:");
+	printf(" 's' leads to maximum compression. ");
+	printf("Not enabling 's' is the 'loose' mode - support of ");
+	printf("arbitrary ASCII characters at the cost of compression.\n");
+	printf("\t-v: be verbose\n");
+	printf("\t-d: be even more verbose (this includes 'v')\n");
+	printf("\t-p: print distribution - ");
 	printf("use with 'c' for debugging purposes\n");
-	printf("\tf: path to stide.db (defaults to current directory)\n");
+	printf("\t-f: path to stide.db (defaults to current directory)\n");
 	printf("\n");
 
 	exit(1);

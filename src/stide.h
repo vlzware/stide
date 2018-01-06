@@ -14,7 +14,18 @@ extern struct parameter param;	/* cmd line parameters */
 #define WLEN_LOOSE 8		/* word length in loose mode (ASCII) */
 #define EOF_STRICT 10005	/* EOF in strict mode */
 #define EOF_LOOSE 0		/* EOF in loose mode */
-#define MAX_TOKENS_BITS 1400	/* max length */
+#define MAX_TOKENS_BITS 1414	/* max length */
+#define MAXERROR 5		/* max count of read errors */
+
+/* min widths of an int representing WLEN_STRICT/LOOSE wide boolean */
+#define INTPSTR 6
+#define INTPLS 3
+
+#define SFREE(ptr) 		\
+	do {			\
+		free(ptr);	\
+		ptr = NULL;	\
+	} while (0);
 
 enum ops {
 	UNSET,
@@ -26,6 +37,7 @@ struct parameter {		/* parameter structure */
 	char *stidedb;		/* path to stide.db */
 	char *pass;		/* password */
 	char *msg;		/* text to hide */
+	int msg_len;		/* length of msg */
 	char *image_in;		/* input image */
 	char *image_out;	/* output image */
 	int strict;		/* strict mode */

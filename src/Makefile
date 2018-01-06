@@ -20,7 +20,6 @@ SRCS = stide.c helpers.c preprocess.c image.c hide.c create.c extract.c
 # automatically generated list of object files
 OBJS = $(SRCS:.c=.o)
 
-
 # default target
 all: stide stide_gtk
 
@@ -33,4 +32,4 @@ hips_gtk: stide_gtk.c
 
 # housekeeping
 clean:
-	rm -f core $(EXE) *.o
+	rm -f core $(EXE) *.o *.gch

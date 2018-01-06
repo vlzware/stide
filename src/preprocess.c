@@ -8,10 +8,11 @@
 #include "stide.h"
 #include "helpers.h"
 
-void embed_word(uint32_t *bit_pos, uint16_t id, int bits,
+void embed_word(int *bit_pos, uint16_t id, int bits,
 		     uint8_t **payload);
 int embed_all_strict(uint8_t count_tokens, char **text_tokens,
 		     uint8_t **payload);
+int check_text_length(uint32_t bits, uint32_t pixels);
 void err_no_db(void);
 void err_no_id(void);
 
@@ -22,62 +23,81 @@ int prep_strict(uint32_t *bits_text, uint8_t **payload, uint32_t pixels)
 {
 	/* tokenize the text to hide */
 	char **text_tokens = NULL;
-	uint8_t count_tokens = 0;
+	int count_tokens = 0;
 	count_tokens = tokenize(param.msg, &text_tokens);
 
 	if (param.verbose)
-		printf("Tokenizing input: found %d tokens.\n", count_tokens);
+		printf("Tokenizing input: found %d tokens.\n\n", count_tokens);
 
 	/* 14 bits for every word from the dictionary plus one for EOF */
 	*bits_text = (count_tokens + 1) * WLEN_STRICT;
-	if (param.verbose)
-		printf("bits_text: %i\n\n", *bits_text);
 
-	/* text + EOF too long? */
-	if (*bits_text > pixels) {
-		printf("%s: The input is too long for the given image!\n",
-		       prog);
-		free(text_tokens);
-		return 1;
+	int res;
+
+	/* check length */
+	if ((res = check_text_length(*bits_text, pixels)) != 0) {
+		SFREE(text_tokens);
+		return res;
 	}
 
 	*payload = (uint8_t *) malloc(sizeof(uint8_t) * (*bits_text));
 	if (*payload == NULL) {
-		printf("%s: Memory error\n", prog);
-		free(text_tokens);
+		printf("(!) Memory error in prep_strict!\n");
+		SFREE(text_tokens);
 		return 1;
 	}
 
-	int res;
 	if ((res = embed_all_strict(count_tokens,
 		    text_tokens, payload)) != 0) {
+		printf("(!) Error in embed_all_strict!\n");
 		return res;
 	}
 
-	free(text_tokens);
+	SFREE(text_tokens);
 
 	return 0;
 }
 
 /**
- * prep_loose: embed the payload allowing arbitrary characters
+ * Embed the payload one char at a time
  */
 int prep_loose(uint32_t *bits_text, uint8_t **payload, uint32_t pixels)
 {
-	/* TODO: WIP */
-	bits_text = bits_text;
-	payload = payload;
-	pixels = pixels;
+	/* size of msg + 1 for EOF */
+	*bits_text = (param.msg_len + 1) * WLEN_LOOSE;
+
+	/* check length */
+	if (check_text_length(*bits_text, pixels))
+		return 1;
+
+	*payload = (uint8_t *) malloc(*bits_text);
+	if (*payload == NULL) {
+		printf("(!) Memory error in prep_loose!\n");
+		return 1;
+	}
+
+	int bit_pos = 0;
+	int i;
+	for (i = 0; i < param.msg_len; i++)
+		embed_word(&bit_pos, param.msg[i], WLEN_LOOSE, payload);
+
+	embed_word(&bit_pos, EOF_LOOSE, WLEN_LOOSE, payload);
+
+	if (param.debug)
+		printf("%i from %i bits processed.\n", bit_pos, *bits_text);
 
 	return 0;
 }
 
+/**
+ * Embed the payload in the tokens using 'strict' mode
+ */
 int embed_all_strict(uint8_t count_tokens, char **text_tokens,
 		     uint8_t **payload)
 {
 	/* temporary variables and position watcher */
 	char *sql_res = NULL;
-	uint32_t bit_pos = 0;
+	int bit_pos = 0;
 
 	/* embed the id's from the words */
 	int i, res;
@@ -86,12 +106,15 @@ int embed_all_strict(uint8_t count_tokens, char **text_tokens,
 			printf("token #%d: %s\n", i, text_tokens[i]);
 
 		res = sql_get(NULL, text_tokens[i], &sql_res);
-		if (res == 1) {
+		switch (res) {
+		case 1:
 			err_no_id();
 			return 1;
-		} else if (res == 2) {
+		case 2:
 			err_no_db();
-			free(text_tokens);
+			return 1;
+		case 3:
+			printf("(!) Error in sql_get!\n");
 			return 1;
 		}
 		if (param.verbose)
@@ -100,7 +123,7 @@ int embed_all_strict(uint8_t count_tokens, char **text_tokens,
 		uint16_t id = (uint16_t) atoi(sql_res);
 		embed_word(&bit_pos, id, WLEN_STRICT, payload);
 
-		free(sql_res);
+		SFREE(sql_res);
 	}
 
 	embed_word(&bit_pos, EOF_STRICT, WLEN_STRICT, payload);
@@ -108,7 +131,10 @@ int embed_all_strict(uint8_t count_tokens, char **text_tokens,
 	return 0;
 }
 
-void embed_word(uint32_t *bit_pos, uint16_t word, int wlen,
+/**
+ * Embed a word/token
+ */
+void embed_word(int *bit_pos, uint16_t word, int wlen,
 		uint8_t **payload)
 {
 	int i = wlen - 1;
@@ -122,14 +148,39 @@ void embed_word(uint32_t *bit_pos, uint16_t word, int wlen,
 		printf("\n");
 }
 
+/**
+ * Check the length of the message.
+ * Return 0 if OK, 1 - otherwise.
+ */
+int check_text_length(uint32_t bits, uint32_t pixels)
+{
+	if (param.debug)
+		printf("\nbits_text: %i\n", bits);
+
+	/* less than max supported */
+	if (bits > MAX_TOKENS_BITS) {
+		printf("(!) The input is too long: %i bits incl EOF!\n", bits);
+		print_max_allowed();
+		return 1;
+	}
+
+	/* text + EOF too long? */
+	if (bits > pixels) {
+		printf("(!) The input is too long for the given image!\n");
+		return 1;
+	}
+
+	return 0;
+}
+
 void err_no_db(void)
 {
-	printf("Can't find/open the database %s!\n", param.stidedb);
-	printf("Provide stide.db or a path to it ('-f' switch)\n\n");
+	printf("(!) Can't find/open the database %s!\n", param.stidedb);
+	printf("(!) Provide stide.db or a path to it ('-f' switch)\n\n");
 }
 
 void err_no_id(void)
 {
-	printf("Token not in the dictionary!\n");
-	printf("Try another word or use without strict mode.\n\n");
+	printf("(!) Token not in the dictionary!\n");
+	printf("(!) Try another word or use without strict mode.\n\n");
 }

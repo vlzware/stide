@@ -29,14 +29,14 @@ int img_save(struct image *img)
 		if (!stbi_write_png(param.image_out, img->width, img->height,
 				    img->bpp, img->rgb,
 				    img->width * img->bpp)) {
-			printf("Can't write %s\n", param.image_out);
+			printf("\n(!) Could not write %s\n", param.image_out);
 			return 1;
 		}
 	} else {
 		/* defaults to bmp */
 		if (!stbi_write_bmp(param.image_out, img->width, img->height,
 				    img->bpp, img->rgb)) {
-			printf("Can't write %s\n", param.image_out);
+			printf("\n(!) Could not write %s\n", param.image_out);
 			return 1;
 		}
 	}

@@ -2,6 +2,7 @@
  * Stide - helper functions
  */
 
+#include "helpers.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -49,7 +50,8 @@ long rand_at_most(long max)
 	unsigned long
 	    num_bins = (unsigned long)max + 1,
 	    num_rand = (unsigned long)RAND_MAX + 1,
-	    bin_size = num_rand / num_bins, defect = num_rand % num_bins;
+	    bin_size = num_rand / num_bins,
+	    defect = num_rand % num_bins;
 
 	long x;
 	do {
@@ -70,6 +72,10 @@ uint32_t *shuffle(uint32_t size)
 {
 	uint32_t *res;
 	res = (uint32_t *) malloc(sizeof(uint32_t) * size);
+	if (res == NULL) {
+		printf("(!) Memory error in 'shuffle'!\n");
+		exit(1);
+	}
 
 	for (uint32_t i = 0; i < size; i++) {
 		res[i] = i;
@@ -87,41 +93,59 @@ uint32_t *shuffle(uint32_t size)
 }
 
 /**
+ * Convert all characters from str to lower case
+ */
+void str_tolower(char *str)
+{
+	while (*str) {
+		*str = tolower(*str);
+		str++;
+	}
+}
+
+/**
+ * Return the number of substrings in str
+ */
+int count_substr(char *str)
+{
+	int count = 0;
+	while (*str) {
+		if (isalnum(*str)) {
+			count++;
+			do {
+				str++;
+			} while (isalnum(*str));
+			if (*str)
+				str++;
+		} else
+			str++;
+	}
+
+	return count;
+}
+
+/**
  * Tokenize a string removing all punctuation; converts all to lowercase.
  * Returns number of tokens. Assings the pointer array to the substrings.
  */
-uint8_t tokenize(char *str, char ***arr)
+int tokenize(char *str, char ***arr)
 {
-	uint8_t count = 0;
-	char *p;
-
-	for (int o = 0; str[o]; o++)
-		str[o] = tolower(str[o]);
+	/* make all lower case */
+	str_tolower(str);
 
 	/* calculate how much substrings */
-	p = str;
-	while (*p != '\0') {
-		if (isalnum(*p)) {
-			count++;
-			do {
-				p++;
-			} while (isalnum(*p));
-			if (*p != '\0')
-				p++;
-		} else
-			p++;
-	}
+	uint8_t count = count_substr(str);
 
 	/* allocate 'count' pointers */
-	*arr = (char **)malloc(sizeof(char *) * (count));
+	*arr = (char **) malloc(sizeof(char *) * (count));
 	if (arr == NULL) {
-		printf("Memory error!\n");
+		printf("(!) Memory error in 'tokenize'!\n");
 		exit(1);
 	}
 
-	/* assign the new pointers to the prpoper substrings */
+	/* assign the new pointers to the proper substrings */
 	int c = 0;
-	while (*str != '\0') {
+	while (*str) {
 		/* alphanumeric found */
 		if (isalnum(*str)) {
 			/* pointer to the start of the substring */
@@ -146,9 +170,54 @@ uint8_t tokenize(char *str, char ***arr)
 }
 
 /**
+ * Build a sql query
+ */
+void build_sql_cmd(char *cmd, const char *select, const char *from,
+		    const char *where, char *query, const int maxlen)
+{
+	snprintf(cmd, maxlen, "SELECT %s FROM %s WHERE %s='%s';",
+		  select, from, where, query);
+}
+
+/**
+ * build_sql_cmd caller
+ */
+int sql_id_or_word(char *cmd, char *id, char *word, int maxquery)
+{
+	if (word != NULL)
+		build_sql_cmd(cmd, "id", "words", "word", word, maxquery);
+	else if (id != NULL)
+		build_sql_cmd(cmd, "word", "words", "id", id, maxquery);
+	else
+		return 1;
+	return 0;
+}
+
+/**
+ * Read sql output. Return 0 on success, 1 - otherwise.
+ * Copy the first found element in res.
+ */
+int read_sql(sqlite3_stmt *stmt, char **res)
+{
+	if (sqlite3_step(stmt) == SQLITE_ROW) {
+		/* allocate memory and copy the first found element in *res */
+		size_t tmps = strlen((char *)sqlite3_column_text(stmt, 0));
+		*res = (char *)malloc(sizeof(char) * (tmps + 1));
+		if (res == NULL) {
+			printf("(!) Memory error in 'read_sql'!\n");
+			exit(1);
+		}
+		strcpy(*res, (char *)sqlite3_column_text(stmt, 0));
+		return 0;
+	}
+	*res = NULL;
+	return 1;
+}
+
+/**
  * Get id or word from the database given a word or id as parameter.
- * Returns 0 if succesfull, otherwise:
- *   1 - no id found; 2 - problem with the table.
+ *   Returns 0 if succesfull, otherwise:
+ *   1 - no id found; 2 - problem with the table; 3 - missing parameter.
  * Points *res to the first found element.
  */
 uint8_t sql_get(char *id, char *word, char **res)
@@ -156,60 +225,36 @@ uint8_t sql_get(char *id, char *word, char **res)
 	sqlite3 *db;
 	uint8_t rc;
 	sqlite3_stmt *stmt;
-	char sqlquery[100];
-	enum modes { GET_ID, GET_WORD };
-	enum modes mode;
-
-	if (id)
-		mode = GET_WORD;
-	else if (word)
-		mode = GET_ID;
-	else
-		return 1;
+	int maxquery = 100;
+	char sqlcmd[maxquery];
 
 	/* open the database */
 	rc = sqlite3_open(param.stidedb, &db);
 	if (rc) {
-		printf("Can't open database: %s\n", sqlite3_errmsg(db));
+		printf("(!) Can't open database: %s\n", sqlite3_errmsg(db));
 		return 2;
 	}
 
-	/* create SQL statement according to the arguments */
-	if (mode == GET_ID)
-		snprintf(sqlquery, sizeof sqlquery, "%s%s%s",
-			 "SELECT id FROM words WHERE word='", word, "';");
-	else
-		snprintf(sqlquery, sizeof sqlquery, "%s%s%s",
-			 "SELECT word FROM words WHERE id='", id, "';");
+	/* build a SQL statement in sqlcmd according to the arguments */
+	if (sql_id_or_word(sqlcmd, id, word, maxquery))
+		/* wrong parameters */
+		return 3;
 
 	/* execute SQL statement */
-	rc = sqlite3_prepare_v2(db, sqlquery, 1000, &stmt, 0);
+	rc = sqlite3_prepare_v2(db, sqlcmd, 1000, &stmt, 0);
 	if (rc != SQLITE_OK) {
-		printf("SQL error:\n%s\n", sqlite3_errmsg(db));
+		printf("(!) SQL error: \"%s\"\n", sqlite3_errmsg(db));
 		sqlite3_close(db);
 		return 2;
 	}
 
+	int err = 0;
 	/* read the sql output */
-	if (sqlite3_step(stmt) == SQLITE_ROW) {
-		/* allocate memory and copy the first found element in *res */
-		size_t tmps = strlen((char *)sqlite3_column_text(stmt, 0));
-		*res = (char *)malloc(sizeof(char) * (tmps + 1));
-		if (res == NULL) {
-			printf("Memory error\n");
-			exit(1);
-		}
-		strcpy(*res, (char *)sqlite3_column_text(stmt, 0));
-	} else {
-		*res = NULL;
-		sqlite3_finalize(stmt);
-		sqlite3_close(db);
-		return 1;
-	}
+	err = read_sql(stmt, res);
 
 	sqlite3_finalize(stmt);
 	sqlite3_close(db);
-	return 0;
+	return err;
 }
 
 /**
@@ -239,4 +284,19 @@ char parse_ext(char *fname)
 {
 	return (strcmp("png",get_filename_ext(fname)) == 0)
 		? extPNG : extBMP;
+}
+
+/**
+ * Print info about the max allowed words/symbols.
+ */
+void print_max_allowed(void)
+{
+	printf("-----\n");
+	printf("Max supported bits count is %i bits.\n",
+		MAX_TOKENS_BITS);
+	printf("This is about %i words in strict mode,\n",
+		(MAX_TOKENS_BITS - WLEN_STRICT)/WLEN_STRICT);
+	printf("or about %i characters in loose mode.\n",
+		(MAX_TOKENS_BITS - WLEN_LOOSE)/WLEN_LOOSE);
+	printf("-----\n");
 }
