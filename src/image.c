@@ -10,8 +10,8 @@
 
 int img_load(struct image *img)
 {
-	img->rgb = stbi_load(param.image_in, &(img->width),
-			     &(img->height), &(img->bpp), 0);
+	img->rgb = stbi_load(param.image_in,
+			     &(img->width), &(img->height), &(img->bpp), 0);
 
 	return 0;
 }
@@ -26,7 +26,8 @@ int img_unload(struct image *img)
 int img_save(struct image *img)
 {
 	if (param.out_ext == extPNG) {
-		if (!stbi_write_png(param.image_out, img->width, img->height,
+		if (!stbi_write_png(param.image_out,
+				    img->width, img->height,
 				    img->bpp, img->rgb,
 				    img->width * img->bpp)) {
 			printf("\n(!) Could not write %s\n", param.image_out);
@@ -34,7 +35,8 @@ int img_save(struct image *img)
 		}
 	} else {
 		/* defaults to bmp */
-		if (!stbi_write_bmp(param.image_out, img->width, img->height,
+		if (!stbi_write_bmp(param.image_out,
+				    img->width, img->height,
 				    img->bpp, img->rgb)) {
 			printf("\n(!) Could not write %s\n", param.image_out);
 			return 1;

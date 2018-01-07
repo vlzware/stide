@@ -26,10 +26,12 @@ all: stide stide_gtk
 stide: $(OBJS) Makefile
 	$(CC) $(CFLAGS) -o ../bin/linux/$@ $(OBJS) $(LIBS)
 
-hips_gtk: stide_gtk.c
-	gcc -g -D_GNU_SOURCE -rdynamic  `pkg-config --cflags gtk+-3.0` \
+stide_gtk: stide_gtk.c
+	gcc -g -rdynamic  `pkg-config --cflags gtk+-3.0` \
 	stide_gtk.c -o ../bin/linux/stide_gtk `pkg-config --libs gtk+-3.0`
+	cp stide.glade ../bin/linux/
 
 # housekeeping
 clean:
 	rm -f core $(EXE) *.o *.gch
+	rm -f ../bin/linux/stide*
