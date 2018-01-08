@@ -32,6 +32,7 @@ Released under MIT License
   <object class="GtkTextBuffer" id="buff_c"/>
   <object class="GtkWindow" id="window_main">
     <property name="can_focus">False</property>
+    <property name="resizable">False</property>
     <signal name="destroy" handler="on_window_destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
@@ -58,6 +59,7 @@ Released under MIT License
                   <object class="GtkEntry" id="msg">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">Message to hide</property>
                     <property name="placeholder_text" translatable="yes">text to hide</property>
                   </object>
                   <packing>
@@ -70,6 +72,7 @@ Released under MIT License
                   <object class="GtkEntry" id="pass_c">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">Password</property>
                     <property name="placeholder_text" translatable="yes">password</property>
                   </object>
                   <packing>
@@ -87,6 +90,7 @@ Released under MIT License
                       <object class="GtkEntry" id="img_c_in">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Input image</property>
                         <property name="placeholder_text" translatable="yes">image IN</property>
                       </object>
                       <packing>
@@ -113,7 +117,8 @@ Released under MIT License
                       <object class="GtkEntry" id="img_c_out">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="margin_left">10</property>
+                        <property name="tooltip_text" translatable="yes">Output image (default "out.png")</property>
+                        <property name="margin_left">5</property>
                         <property name="placeholder_text" translatable="yes">png.out</property>
                       </object>
                       <packing>
@@ -140,7 +145,8 @@ Released under MIT License
                       <object class="GtkEntry" id="db_c">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="margin_left">10</property>
+                        <property name="tooltip_text" translatable="yes">Path to database (default "stide.db")</property>
+                        <property name="margin_left">5</property>
                         <property name="placeholder_text" translatable="yes">stide.db</property>
                       </object>
                       <packing>
@@ -171,15 +177,17 @@ Released under MIT License
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButtonBox" id="swithes_c">
+                  <object class="GtkBox" id="switches_c">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="layout_style">center</property>
+                    <property name="halign">center</property>
+                    <property name="spacing">5</property>
                     <child>
                       <object class="GtkComboBoxText" id="strict_c">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="halign">center</property>
+                        <property name="tooltip_text" translatable="yes">Operation mode</property>
+                        <property name="halign">start</property>
                         <property name="valign">start</property>
                         <property name="active">0</property>
                         <property name="has_entry">True</property>
@@ -198,14 +206,15 @@ Released under MIT License
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkComboBoxText" id="verbose_c">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="halign">center</property>
+                        <property name="tooltip_text" translatable="yes">Level of verbosity</property>
+                        <property name="halign">start</property>
                         <property name="valign">start</property>
                         <property name="active">1</property>
                         <property name="has_entry">True</property>
@@ -224,6 +233,23 @@ Released under MIT License
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="checkbutton1">
+                        <property name="label" translatable="yes">print</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Do not hide, just print the distribution on the image.</property>
+                        <property name="halign">start</property>
+                        <property name="xalign">0</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
@@ -231,7 +257,7 @@ Released under MIT License
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
                 <child>
@@ -241,6 +267,7 @@ Released under MIT License
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Work!</property>
                     <property name="valign">start</property>
                     <property name="margin_left">5</property>
                     <property name="margin_right">5</property>
@@ -250,7 +277,7 @@ Released under MIT License
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="padding">2</property>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
                 <child>
@@ -258,6 +285,7 @@ Released under MIT License
                     <property name="height_request">350</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">This is the output of Stide in -create- mode.</property>
                     <property name="valign">start</property>
                     <property name="shadow_type">in</property>
                     <child>
@@ -274,7 +302,7 @@ Released under MIT License
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
               </object>
@@ -313,6 +341,7 @@ Released under MIT License
                   <object class="GtkEntry" id="pass_e">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">Password</property>
                     <property name="placeholder_text" translatable="yes">password</property>
                   </object>
                   <packing>
@@ -330,6 +359,7 @@ Released under MIT License
                       <object class="GtkEntry" id="img_e">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Input image</property>
                         <property name="placeholder_text" translatable="yes">image IN</property>
                       </object>
                       <packing>
@@ -356,6 +386,7 @@ Released under MIT License
                       <object class="GtkEntry" id="db_e">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Path to database (default "stide.db").</property>
                         <property name="margin_left">10</property>
                         <property name="placeholder_text" translatable="yes">stide.db</property>
                       </object>
@@ -395,6 +426,7 @@ Released under MIT License
                       <object class="GtkComboBoxText" id="strict_e">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Operation mode</property>
                         <property name="halign">center</property>
                         <property name="valign">start</property>
                         <property name="active">0</property>
@@ -420,6 +452,7 @@ Released under MIT License
                       <object class="GtkComboBoxText" id="verbose_e">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Level of verbosity</property>
                         <property name="halign">center</property>
                         <property name="valign">start</property>
                         <property name="active">1</property>
@@ -456,6 +489,7 @@ Released under MIT License
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Work!</property>
                     <property name="valign">start</property>
                     <property name="margin_left">5</property>
                     <property name="margin_right">5</property>
@@ -472,6 +506,7 @@ Released under MIT License
                     <property name="height_request">350</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">This is the output of Stide in -extract- mode.</property>
                     <property name="valign">start</property>
                     <property name="shadow_type">in</property>
                     <child>
