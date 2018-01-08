@@ -54,13 +54,37 @@ Released under MIT License
                 <property name="valign">start</property>
                 <property name="margin_top">3</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">3</property>
+                <property name="spacing">5</property>
                 <child>
-                  <object class="GtkEntry" id="msg">
+                  <object class="GtkBox" id="box2">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">Message to hide</property>
-                    <property name="placeholder_text" translatable="yes">text to hide</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
+                    <child>
+                      <object class="GtkLabel" id="label1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Message:  </property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="msg">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Message to hide</property>
+                        <property name="placeholder_text" translatable="yes">text to hide</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -69,11 +93,35 @@ Released under MIT License
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="pass_c">
+                  <object class="GtkBox" id="pass_box_c">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">Password</property>
-                    <property name="placeholder_text" translatable="yes">password</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkLabel" id="pass_c_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Password: </property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="pass_c">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Password</property>
+                        <property name="placeholder_text" translatable="yes">password</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -173,7 +221,7 @@ Released under MIT License
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -286,12 +334,13 @@ Released under MIT License
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="tooltip_text" translatable="yes">This is the output of Stide in -create- mode.</property>
-                    <property name="valign">start</property>
+                    <property name="vexpand">True</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTextView" id="term_c">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="vexpand">True</property>
                         <property name="editable">False</property>
                         <property name="wrap_mode">word-char</property>
                         <property name="buffer">buff_c</property>
@@ -324,7 +373,7 @@ Released under MIT License
                 <property name="valign">start</property>
                 <property name="margin_top">3</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">3</property>
+                <property name="spacing">5</property>
                 <child>
                   <object class="GtkFixed" id="fixed1">
                     <property name="height_request">25</property>
@@ -338,11 +387,35 @@ Released under MIT License
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="pass_e">
+                  <object class="GtkBox" id="pass_box_e">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">Password</property>
-                    <property name="placeholder_text" translatable="yes">password</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkLabel" id="pass_e_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Password: </property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="pass_e">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Password</property>
+                        <property name="placeholder_text" translatable="yes">password</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -414,7 +487,7 @@ Released under MIT License
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -479,7 +552,7 @@ Released under MIT License
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
                 <child>
@@ -498,7 +571,7 @@ Released under MIT License
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="padding">2</property>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
                 <child>
@@ -507,12 +580,13 @@ Released under MIT License
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="tooltip_text" translatable="yes">This is the output of Stide in -extract- mode.</property>
-                    <property name="valign">start</property>
+                    <property name="vexpand">True</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTextView" id="term_e">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="vexpand">True</property>
                         <property name="editable">False</property>
                         <property name="wrap_mode">word-char</property>
                         <property name="buffer">buff_c</property>
@@ -523,7 +597,7 @@ Released under MIT License
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
               </object>
@@ -583,7 +657,7 @@ Released under MIT License
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
