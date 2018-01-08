@@ -572,6 +572,7 @@ Released under MIT License
                     <property name="valign">start</property>
                     <property name="margin_left">5</property>
                     <property name="margin_right">5</property>
+                    <signal name="clicked" handler="check_fields_e" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
