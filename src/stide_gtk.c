@@ -22,14 +22,12 @@ GtkEntry *msg;
 GtkEntry *img_c_in;
 GtkEntry *img_c_out;
 GtkEntry *img_e;
+GtkEntry *db_c;
+GtkEntry *db_e;
 GtkTextBuffer *buff_c;
 GtkTextBuffer *buff_e;
 GtkTextView *term_c;
 GtkTextView *term_e;
-GtkComboBoxText *strict_c;
-GtkComboBoxText *verbose_c;
-GtkComboBoxText *strict_e;
-GtkComboBoxText *verbose_e;
 
 int main(int argc, char *argv[])
 {
@@ -53,6 +51,10 @@ int main(int argc, char *argv[])
 	    GTK_ENTRY(gtk_builder_get_object(builder, "img_c_out"));
 	img_e =
 	    GTK_ENTRY(gtk_builder_get_object(builder, "img_e"));
+    db_c =
+	    GTK_ENTRY(gtk_builder_get_object(builder, "db_c"));
+    db_e =
+	    GTK_ENTRY(gtk_builder_get_object(builder, "db_e"));
 	msg =
 	    GTK_ENTRY(gtk_builder_get_object(builder, "msg"));
 	buff_c =
@@ -63,17 +65,8 @@ int main(int argc, char *argv[])
 	    GTK_TEXT_VIEW(gtk_builder_get_object(builder, "term_c"));
 	term_e =
 	    GTK_TEXT_VIEW(gtk_builder_get_object(builder, "term_e"));
-    	strict_c =
-	    GTK_ENTRY(gtk_builder_get_object(builder, "strict_c"));
-    	strict_e =
-	    GTK_ENTRY(gtk_builder_get_object(builder, "strict_e"));
-    	verbose_c =
-	    GTK_ENTRY(gtk_builder_get_object(builder, "verbose_c"));
-    	verbose_e =
-	    GTK_ENTRY(gtk_builder_get_object(builder, "verbose_e"));
 
 	g_object_unref(builder);
-
 	gtk_widget_show(window);
 	gtk_main();
 
@@ -83,7 +76,7 @@ int main(int argc, char *argv[])
 /* learning to use GTK ... */
 void strict_c_set(GtkComboBox *widget, gpointer data)
 {
-	char *str = gtk_entry_get_text(data);
+	const char *str = gtk_entry_get_text(data);
 	g_print("!!!!! %s\n", str);
 }
 
@@ -93,7 +86,7 @@ void on_window_destroy()
 	gtk_main_quit();
 }
 
-/* choose input file for hips_create */
+/* choose input file for -create- mode */
 void img_c_in_click()
 {
 	char *filename = get_file();
@@ -103,7 +96,7 @@ void img_c_in_click()
 	}
 }
 
-/* choose output file for hips_create */
+/* choose output file for -create- mode */
 void img_c_out_click()
 {
 	char *filename = get_file();
@@ -113,12 +106,32 @@ void img_c_out_click()
 	}
 }
 
-/* choose file for hips_extract */
+/* choose file for -extract- mode */
 void img_e_click()
 {
 	char *filename = get_file();
 	if (filename) {
 		gtk_entry_set_text(img_e, filename);
+		g_free(filename);
+	}
+}
+
+/* choose db for -create- mode */
+void db_c_click()
+{
+    char *filename = get_file();
+	if (filename) {
+		gtk_entry_set_text(db_c, filename);
+		g_free(filename);
+	}
+}
+
+/* choose db for -extract- mode */
+void db_e_click()
+{
+    char *filename = get_file();
+	if (filename) {
+		gtk_entry_set_text(db_e, filename);
 		g_free(filename);
 	}
 }
@@ -158,19 +171,6 @@ void check_fields_c()
 		on_error();
 		return;
 	}
-
-
-	gchar *s =
-		gtk_combo_box_text_get_active_text(strict_c);
-	gchar *v =
-		gtk_combo_box_text_get_active_text(verbose_c);
-	char *strict = strcmp(s, "strict") == 0
-				? "-s": " ";
-	char *verbose = strcmp(s, "silent") == 0
-				? " " : strcmp(s, "verbose") == 0
-				? "-v": "-d";
-
-
 	char *t;              /* -s -p -v -d -f db  pass   msg   in out */
 	asprintf(&t, "./stide -c %s %s %s %s %s %s \"%s\" \"%s\" %s %s 2>&1",
 		"", "", "", "", "", "", "",
@@ -182,8 +182,6 @@ void check_fields_c()
 	g_print("\n");
 	execute(t, 0);
 	free(t);
-	g_free(s);
-	g_free(v);
 }
 
 /* check if all fields are filled (extract) and execute */

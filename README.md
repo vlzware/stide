@@ -16,20 +16,22 @@
 - this works only on linux (Windows support comes at some point later),
 - [get this archive](https://github.com/vlzware/HIPS-steganography-tool/blob/master/releases/hips_bin_1.0.0.tar.gz)
 - extract the archive and then start hips_gtk,
-- OR for the **latest and much better command line version** clone the repository and compile by yourself with `make` - the resulting binary is bin/linux/stide
+- OR for the **latest and much better command line version** clone the repository and compile by yourself (see "Compiling").
 #### for creating image with embedded secret message:
-1. use the **create** tab
+1. use the **create** tab;
 2. set input and output image:
 * 	use some jpg, png or bmp image as input (like the included cat.png),
-* 	output can be only png or bmp (as of now).
-3. set password and type the secret message
-4. and hit **Go!**
+* 	output can be only png or bmp (as of now);
+3. set password and type the secret message;
+4. set some switches if you need to;
+5. and hit **Go!**
 
 #### for extracting the embedded secret message:
 1. use the **extract** tab
 2. choose the image
 3. fill in the password
-4. hit **Go!**
+4. set some switches if you need to;
+5. hit **Go!**
 
 #### SECURITY NOTE:
 - Only use unique pictures (i.e. made by you) and use each picture just once with the same password - this adds a lot to the overall security
@@ -52,11 +54,29 @@ you can communicate in privacy without even looking suspicious.
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
 #### 5. More details/ example?
-* Usage:
+- Coming soon.
+
+#### 6. Compilation:
+- Compile with 'make' from the 'src' directory. You may need to install sqlite3 headers (for ubuntu this is the 'libsqlite3-dev' package). The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
+- Here is the complete output of 'ldd stide':
+```
+	linux-vdso.so.1 =>  (0x00007ffc7b77e000)
+	libsqlite3.so.0 => /usr/lib/x86_64-linux-gnu/libsqlite3.so.0 (0x00007efffb687000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007efffb37e000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007efffafb3000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007efffad96000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007efffab92000)
+	/lib64/ld-linux-x86-64.so.2 (0x000055f67faf6000)
+
+```
+- 'stide.glade' is a .xml file for the GUI settings;
+- 'stide_gtk' is the gtk gui executable - this is basically just an interface to to command line tool.
+
+#### 7. Command line usage:
 ```
     $./stide
 ```
-- This shows all available options with their description.
+- This shows all available options with their description and usage.
 
 * **creating an image:**
 ```
@@ -68,26 +88,26 @@ you can communicate in privacy without even looking suspicious.
     $./stide -e[svdf] [path/to/stide.db] password img-in
 ```
 
-#### 6. Limitations/TODO/planed upgrades?
-* no windows binaries or gui, although you can compile and run all under cygwin
-* outputs only png or bmp
-* the used png compression is not optimal (WIP) and this can lead to somewhat bigger output
+#### 8. Limitations/TODO/planed upgrades?
+- no windows binaries or gui, although you can compile and run all under cygwin
+- outputs only png or bmp
+- the used png compression is not optimal (WIP) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits.
 In numbers - our example cat.png grows from 66 to 85 kB.
-* ~~words not in the dictionary are not supported~~ Use the last command line version 'stide' which supports both - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
+- ~~words not in the dictionary are not supported~~ Use the last command line version 'stide' which supports both - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
 	
 ### CREDITS:
 
-* HIPS uses the stb_image and stb_image_write libraries from: [STB](https://github.com/nothings/stb/).
+- Stide uses the stb_image and stb_image_write libraries from: [STB](https://github.com/nothings/stb/).
 
-* This tool was (originally) made as my final project in [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x).
+- This tool was (originally) made as my final project in [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x).
 
-* The 10 000 words dictionary is from [Josh Kaufman](https://github.com/first20hours/google-10000-english) (I added small number of words at the end like my name and hips_eof) Data files are derived from the Google Web Trillion Word Corpus, as described by Thorsten Brants and Alex Franz, and distributed by the Linguistic Data Consortium. Subsets of this corpus distributed by Peter Novig. Corpus editing and cleanup by Josh Kaufman.
+- The 10 000 words dictionary is from [Josh Kaufman](https://github.com/first20hours/google-10000-english) (I added small number of words at the end like my name and hips_eof) Data files are derived from the Google Web Trillion Word Corpus, as described by Thorsten Brants and Alex Franz, and distributed by the Linguistic Data Consortium. Subsets of this corpus distributed by Peter Novig. Corpus editing and cleanup by Josh Kaufman.
 
-* the sample picture 'cat.png' was taken from http://www.freeimages.com
+- the sample picture 'cat.png' was taken from http://www.freeimages.com
 
 DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 06.01.2018
+last updated: 08.01.2018
