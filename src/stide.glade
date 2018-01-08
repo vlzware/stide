@@ -3,29 +3,37 @@
 <interface>
   <requires lib="gtk+" version="3.12"/>
   <object class="GtkTextBuffer" id="about_buffer">
-    <property name="text" translatable="yes">This is the GUI frontend to:
+    <property name="text" translatable="yes">
+
+
+This is the GUI frontend to:
+
 
 Stide - hide secrets in images
 https://github.com/vlzware/stide
 
+
 Steganography tool featuring compression, encryption
 and (almost) non-intrusive hiding techniques.
+
 
 Author:
 Vladimir Zhelezarov
 jelezarov.vladimir@gmail.com
 
-This GUI is build with GTK+ for C.
 
-Released under MIT License</property>
+
+This GUI is build with GTK+ for C.
+Released under MIT License
+
+
+</property>
   </object>
-  <object class="GtkTextBuffer" id="b_console_c"/>
-  <object class="GtkTextBuffer" id="b_console_e"/>
+  <object class="GtkTextBuffer" id="buff_c"/>
   <object class="GtkWindow" id="window_main">
     <property name="can_focus">False</property>
-    <property name="default_width">440</property>
-    <property name="default_height">350</property>
-    <signal name="destroy" handler="on_window1_destroy" swapped="no"/>
+    <property name="resizable">False</property>
+    <signal name="destroy" handler="on_window_destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
@@ -43,14 +51,43 @@ Released under MIT License</property>
               <object class="GtkBox" id="box_c">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_top">3</property>
+                <property name="valign">start</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">3</property>
+                <property name="spacing">5</property>
                 <child>
-                  <object class="GtkEntry" id="password_c">
+                  <object class="GtkBox" id="msg_c_box">
+                    <property name="height_request">25</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="placeholder_text" translatable="yes">password</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkLabel" id="msg_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Message:  </property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="msg">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Message to hide</property>
+                        <property name="placeholder_text" translatable="yes">text to hide</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -59,10 +96,35 @@ Released under MIT License</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="text_to_hide">
+                  <object class="GtkBox" id="pass_box_c">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="placeholder_text" translatable="yes">text to hide</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkLabel" id="pass_c_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Password: </property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="pass_c">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Password</property>
+                        <property name="placeholder_text" translatable="yes">password</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -71,14 +133,15 @@ Released under MIT License</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="box2">
+                  <object class="GtkBox" id="paths_c">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
+                    <property name="halign">center</property>
                     <child>
-                      <object class="GtkEntry" id="image_c_in">
+                      <object class="GtkEntry" id="img_c_in">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Input image</property>
                         <property name="placeholder_text" translatable="yes">image IN</property>
                       </object>
                       <packing>
@@ -88,24 +151,26 @@ Released under MIT License</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="button_image_c">
+                      <object class="GtkButton" id="bt_img_c_in">
                         <property name="label" translatable="yes">...</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="on_button_image_c_in_clicked" swapped="no"/>
+                        <signal name="clicked" handler="img_c_in_click" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="image_c_out">
+                      <object class="GtkEntry" id="img_c_out">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="placeholder_text" translatable="yes">image OUT</property>
+                        <property name="tooltip_text" translatable="yes">Output image (default "out.png")</property>
+                        <property name="margin_left">5</property>
+                        <property name="placeholder_text" translatable="yes">png.out</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -114,12 +179,12 @@ Released under MIT License</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="button_image_c_out">
+                      <object class="GtkButton" id="bt_img_c_out">
                         <property name="label" translatable="yes">...</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="on_button_image_c_out_clicked" swapped="no"/>
+                        <signal name="clicked" handler="img_c_out_click" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -127,20 +192,34 @@ Released under MIT License</property>
                         <property name="position">4</property>
                       </packing>
                     </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="go_c">
-                    <property name="label" translatable="yes">Go!</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <signal name="clicked" handler="check_fields_c" swapped="no"/>
+                    <child>
+                      <object class="GtkEntry" id="db_c">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Path to database (default "stide.db")</property>
+                        <property name="margin_left">5</property>
+                        <property name="placeholder_text" translatable="yes">stide.db</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">6</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="bt_db_c">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="db_c_click" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">7</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -149,26 +228,134 @@ Released under MIT License</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow1">
-                    <property name="height_request">250</property>
+                  <object class="GtkBox" id="switches_c">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="spacing">5</property>
                     <child>
-                      <object class="GtkTextView" id="console_c">
+                      <object class="GtkComboBoxText" id="strict_c">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Operation mode</property>
+                        <property name="halign">start</property>
+                        <property name="valign">start</property>
+                        <property name="active">0</property>
+                        <property name="has_entry">True</property>
+                        <property name="active_id">0</property>
+                        <items>
+                          <item id="0" translatable="yes">strict</item>
+                          <item id="1" translatable="yes">loose</item>
+                        </items>
+                        <signal name="changed" handler="strict_c_set" object="comboboxtext-entry" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="comboboxtext-entry">
+                            <property name="can_focus">False</property>
+                            <property name="text" translatable="yes">strict</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="verbose_c">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Level of verbosity</property>
+                        <property name="halign">start</property>
+                        <property name="valign">start</property>
+                        <property name="active">1</property>
+                        <property name="has_entry">True</property>
+                        <items>
+                          <item id="0" translatable="yes">silent</item>
+                          <item id="1" translatable="yes">verbose</item>
+                          <item id="2" translatable="yes">debug</item>
+                        </items>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="comboboxtext-entry1">
+                            <property name="can_focus">False</property>
+                            <property name="text" translatable="yes">verbose</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="checkbutton1">
+                        <property name="label" translatable="yes">print</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="wrap_mode">word-char</property>
-                        <property name="buffer">b_console_c</property>
-                        <property name="monospace">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Do not hide, just print the distribution on the image.</property>
+                        <property name="halign">start</property>
+                        <property name="xalign">0</property>
+                        <property name="draw_indicator">True</property>
                       </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="go_c">
+                    <property name="label" translatable="yes">Go!</property>
+                    <property name="height_request">25</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Work!</property>
+                    <property name="valign">start</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <signal name="clicked" handler="check_fields_c" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="padding">2</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="term_c_holder">
+                    <property name="height_request">350</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">This is the output of Stide in -create- mode.</property>
+                    <property name="vexpand">True</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkTextView" id="term_c">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="editable">False</property>
+                        <property name="wrap_mode">word-char</property>
+                        <property name="buffer">buff_c</property>
+                        <property name="monospace">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
               </object>
@@ -187,15 +374,18 @@ Released under MIT License</property>
               <object class="GtkBox" id="box_e">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_top">3</property>
+                <property name="valign">start</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">3</property>
+                <property name="spacing">5</property>
                 <child>
-                  <object class="GtkEntry" id="entry1">
+                  <object class="GtkFixed" id="fixed1">
+                    <property name="height_request">23</property>
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
-                    <property name="editable">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -204,28 +394,15 @@ Released under MIT License</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="password_e">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="placeholder_text" translatable="yes">password</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box3">
+                  <object class="GtkBox" id="pass_box_e">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="spacing">5</property>
                     <child>
-                      <object class="GtkEntry" id="image_e">
-                        <property name="width_request">300</property>
+                      <object class="GtkLabel" id="pass_e_label">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="placeholder_text" translatable="yes">image</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Password: </property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -234,15 +411,14 @@ Released under MIT License</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="button_image_e">
-                        <property name="label" translatable="yes">...</property>
+                      <object class="GtkEntry" id="pass_e">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <signal name="clicked" handler="on_button_image_e_clicked" swapped="no"/>
+                        <property name="tooltip_text" translatable="yes">Password</property>
+                        <property name="placeholder_text" translatable="yes">password</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
@@ -251,16 +427,69 @@ Released under MIT License</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="go_e">
-                    <property name="label" translatable="yes">Go!</property>
+                  <object class="GtkBox" id="paths_e">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <signal name="clicked" handler="check_fields_e" swapped="no"/>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <child>
+                      <object class="GtkEntry" id="img_e">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Input image</property>
+                        <property name="placeholder_text" translatable="yes">image IN</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="bt_img_e">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="img_e_click" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="db_e">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Path to database (default "stide.db").</property>
+                        <property name="margin_left">10</property>
+                        <property name="placeholder_text" translatable="yes">stide.db</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="bt_db_e">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="db_e_click" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">5</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -269,26 +498,114 @@ Released under MIT License</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow2">
-                    <property name="height_request">250</property>
+                  <object class="GtkButtonBox" id="switches_e">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
+                    <property name="can_focus">False</property>
+                    <property name="layout_style">center</property>
                     <child>
-                      <object class="GtkTextView" id="console_e">
+                      <object class="GtkComboBoxText" id="strict_e">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="wrap_mode">word-char</property>
-                        <property name="buffer">b_console_e</property>
-                        <property name="monospace">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Operation mode</property>
+                        <property name="halign">center</property>
+                        <property name="valign">start</property>
+                        <property name="active">0</property>
+                        <property name="has_entry">True</property>
+                        <items>
+                          <item id="0e" translatable="yes">strict</item>
+                          <item id="1e" translatable="yes">loose</item>
+                        </items>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="comboboxtext-entry6">
+                            <property name="can_focus">True</property>
+                            <property name="text" translatable="yes">strict</property>
+                          </object>
+                        </child>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="verbose_e">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Level of verbosity</property>
+                        <property name="halign">center</property>
+                        <property name="valign">start</property>
+                        <property name="active">1</property>
+                        <property name="has_entry">True</property>
+                        <items>
+                          <item id="0ve" translatable="yes">silent</item>
+                          <item id="1ve" translatable="yes">verbose</item>
+                          <item id="2ve" translatable="yes">debug</item>
+                        </items>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="comboboxtext-entry7">
+                            <property name="can_focus">True</property>
+                            <property name="text" translatable="yes">verbose</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">2</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="go_e">
+                    <property name="label" translatable="yes">Go!</property>
+                    <property name="height_request">25</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Work!</property>
+                    <property name="valign">start</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <signal name="clicked" handler="check_fields_e" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="padding">2</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="term_e_holder">
+                    <property name="height_request">350</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">This is the output of Stide in -extract- mode.</property>
+                    <property name="vexpand">True</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkTextView" id="term_e">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="editable">False</property>
+                        <property name="wrap_mode">word-char</property>
+                        <property name="buffer">buff_c</property>
+                        <property name="monospace">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
               </object>
@@ -308,7 +625,7 @@ Released under MIT License</property>
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="scrolledwindow3">
+              <object class="GtkScrolledWindow" id="box_about">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="shadow_type">in</property>
@@ -318,13 +635,14 @@ Released under MIT License</property>
                     <property name="can_focus">True</property>
                     <property name="halign">baseline</property>
                     <property name="valign">center</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
                     <property name="pixels_above_lines">2</property>
                     <property name="editable">False</property>
                     <property name="wrap_mode">word-char</property>
                     <property name="justification">center</property>
                     <property name="cursor_visible">False</property>
                     <property name="buffer">about_buffer</property>
-                    <property name="input_purpose">alpha</property>
                     <property name="monospace">True</property>
                   </object>
                 </child>
@@ -354,4 +672,5 @@ Released under MIT License</property>
       </object>
     </child>
   </object>
+  <object class="GtkTextBuffer" id="buff_e"/>
 </interface>

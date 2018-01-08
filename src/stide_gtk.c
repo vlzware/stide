@@ -80,6 +80,13 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+/* learning to use GTK ... */
+void strict_c_set(GtkComboBox *widget, gpointer data)
+{
+	char *str = gtk_entry_get_text(data);
+	g_print("!!!!! %s\n", str);
+}
+
 /* called when window is closed */
 void on_window_destroy()
 {
@@ -166,7 +173,8 @@ void check_fields_c()
 
 	char *t;              /* -s -p -v -d -f db  pass   msg   in out */
 	asprintf(&t, "./stide -c %s %s %s %s %s %s \"%s\" \"%s\" %s %s 2>&1",
-		 gtk_entry_get_text()
+		"", "", "", "", "", "", "",
+		 // gtk_entry_get_text()
 		 gtk_entry_get_text(pass_c), gtk_entry_get_text(msg),
 		 gtk_entry_get_text(img_c_in),
 		 gtk_entry_get_text(img_c_out));
