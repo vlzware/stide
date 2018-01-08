@@ -51,9 +51,9 @@ int main(int argc, char *argv[])
 	    GTK_ENTRY(gtk_builder_get_object(builder, "img_c_out"));
 	img_e =
 	    GTK_ENTRY(gtk_builder_get_object(builder, "img_e"));
-    db_c =
+	db_c =
 	    GTK_ENTRY(gtk_builder_get_object(builder, "db_c"));
-    db_e =
+	db_e =
 	    GTK_ENTRY(gtk_builder_get_object(builder, "db_e"));
 	msg =
 	    GTK_ENTRY(gtk_builder_get_object(builder, "msg"));
@@ -119,7 +119,7 @@ void img_e_click()
 /* choose db for -create- mode */
 void db_c_click()
 {
-    char *filename = get_file();
+	char *filename = get_file();
 	if (filename) {
 		gtk_entry_set_text(db_c, filename);
 		g_free(filename);
@@ -129,7 +129,7 @@ void db_c_click()
 /* choose db for -extract- mode */
 void db_e_click()
 {
-    char *filename = get_file();
+	char *filename = get_file();
 	if (filename) {
 		gtk_entry_set_text(db_e, filename);
 		g_free(filename);
