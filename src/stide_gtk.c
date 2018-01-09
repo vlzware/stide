@@ -29,6 +29,19 @@ GtkTextBuffer *buff_e;
 GtkTextView *term_c;
 GtkTextView *term_e;
 
+/* program parameters */
+char *_img_c_out = "out.png";
+char *_db_c = "stide.db";
+char *_db_e = "stide.db";
+char *_strict_c = "-s";
+char *_strict_e = "-s";
+char *_verbose_c = "-v";
+char *_verbose_e = "-v";
+char *_debug_c = " ";
+char *_debug_e = " ";
+char *_p = " ";
+
+
 int main(int argc, char *argv[])
 {
 	GtkBuilder *builder;
@@ -66,6 +79,10 @@ int main(int argc, char *argv[])
 	term_e =
 	    GTK_TEXT_VIEW(gtk_builder_get_object(builder, "term_e"));
 
+	gtk_entry_set_text(img_c_out, _img_c_out);
+	gtk_entry_set_text(db_c, _db_c);
+	gtk_entry_set_text(db_e, _db_e);
+
 	g_object_unref(builder);
 	gtk_widget_show(window);
 	gtk_main();
@@ -73,17 +90,55 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-/* learning to use GTK ... */
-void strict_c_set(GtkComboBox *widget, gpointer data)
-{
-	const char *str = gtk_entry_get_text(data);
-	g_print("!!!!! %s\n", str);
-}
-
 /* called when window is closed */
 void on_window_destroy()
 {
 	gtk_main_quit();
+}
+
+/* switch 'strict' in -create- mode */
+void strict_c_set(GtkComboBox *widget, gpointer data)
+{
+	const char *str = gtk_entry_get_text(data);
+	_strict_c = (strcmp(str, "loose") == 0)
+		? " " : "-s";
+	g_print("...strict_c: '%s'\n", _strict_c);
+}
+
+/* switch 'strict' in -extract- mode */
+void strict_e_set(GtkComboBox *widget, gpointer data)
+{
+	const char *str = gtk_entry_get_text(data);
+	_strict_e = (strcmp(str, "loose") == 0)
+		? " " : "-s";
+	g_print("...strict_e: '%s'\n", _strict_e);
+}
+
+/* switch 'verbose'/'debug' -create- mode */
+void verbose_c_set(GtkComboBox *widget, gpointer data)
+{
+	const char *str = gtk_entry_get_text(data);
+	_verbose_c = (strcmp(str, "silent") == 0)
+		? " " : (strcmp(str, "verbose") == 0)
+			? "-v" : "-d";
+	g_print("...verbose_c: '%s'\n", _verbose_c);
+}
+
+/* switch 'verbose'/'debug' -extract- mode */
+void verbose_e_set(GtkComboBox *widget, gpointer data)
+{
+	const char *str = gtk_entry_get_text(data);
+	_verbose_e = (strcmp(str, "silent") == 0)
+		? " " : (strcmp(str, "verbose") == 0)
+			? "-v" : "-d";
+	g_print("...verbose_e: '%s'\n", _verbose_e);
+}
+
+/* switch 'print' */
+void p_toggle(void) {
+	_p = (strcmp(_p, " ") == 0)
+		? "-p" : " ";
+	g_print("...p: '%s'\n", _p);
 }
 
 /* choose input file for -create- mode */
@@ -166,19 +221,22 @@ void check_fields_c()
 {
 	if (strlen(gtk_entry_get_text(pass_c)) == 0
 	    || strlen(gtk_entry_get_text(img_c_in)) == 0
-	//     || strlen(gtk_entry_get_text(img_c_out)) == 0
 	    || strlen(gtk_entry_get_text(msg)) == 0) {
 		on_error();
 		return;
 	}
 	char *t;              /* -s -p -v -d -f db  pass   msg   in out */
-	asprintf(&t, "./stide -c %s %s %s %s %s %s \"%s\" \"%s\" %s %s 2>&1",
-		"", "", "", "", "", "", "",
-		 // gtk_entry_get_text()
-		 gtk_entry_get_text(pass_c), gtk_entry_get_text(msg),
-		 gtk_entry_get_text(img_c_in),
-		 gtk_entry_get_text(img_c_out));
-	g_print("%s", t);
+	asprintf(&t, "./stide -c %s %s %s %s -f %s \"%s\" \"%s\" %s %s 2>&1",
+		_strict_c,
+		_p,
+		_verbose_c,
+		_debug_c,
+		gtk_entry_get_text(db_c),
+		gtk_entry_get_text(pass_c),
+		gtk_entry_get_text(msg),
+		gtk_entry_get_text(img_c_in),
+		gtk_entry_get_text(img_c_out));
+	g_print("Calling stide with: %s", t);
 	g_print("\n");
 	execute(t, 0);
 	free(t);
@@ -188,17 +246,22 @@ void check_fields_c()
 void check_fields_e()
 {
 	if (strlen(gtk_entry_get_text(pass_e)) == 0
-	    || strlen(gtk_entry_get_text(img_e)) == 0)
+	    || strlen(gtk_entry_get_text(img_e)) == 0) {
 		on_error();
-	else {
-		char *t;
-		asprintf(&t, "./hips_e %s %s 2>&1", gtk_entry_get_text(pass_e),
-			 gtk_entry_get_text(img_e));
-		g_print("%s", t);
-		g_print("\n");
-		execute(t, 1);
-		free(t);
+		return;
 	}
+	char *t;              /* -s -v -d -f db  pass  in */
+	asprintf(&t, "./stide -e %s %s %s -f %s \"%s\" %s 2>&1",
+		_strict_e,
+		_verbose_e,
+		_debug_e,
+		gtk_entry_get_text(db_e),
+		gtk_entry_get_text(pass_e),
+		gtk_entry_get_text(img_e));
+	g_print("Calling stide with: %s", t);
+	g_print("\n");
+	execute(t, 0);
+	free(t);
 }
 
 /* simple error pop-up */

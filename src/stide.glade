@@ -247,9 +247,9 @@ Released under MIT License
                           <item id="0" translatable="yes">strict</item>
                           <item id="1" translatable="yes">loose</item>
                         </items>
-                        <signal name="changed" handler="strict_c_set" object="comboboxtext-entry" swapped="no"/>
+                        <signal name="changed" handler="strict_c_set" object="strict_c_entry" swapped="no"/>
                         <child internal-child="entry">
-                          <object class="GtkEntry" id="comboboxtext-entry">
+                          <object class="GtkEntry" id="strict_c_entry">
                             <property name="can_focus">False</property>
                             <property name="text" translatable="yes">strict</property>
                           </object>
@@ -275,8 +275,9 @@ Released under MIT License
                           <item id="1" translatable="yes">verbose</item>
                           <item id="2" translatable="yes">debug</item>
                         </items>
+                        <signal name="changed" handler="verbose_c_set" object="verbose_c_entry" swapped="no"/>
                         <child internal-child="entry">
-                          <object class="GtkEntry" id="comboboxtext-entry1">
+                          <object class="GtkEntry" id="verbose_c_entry">
                             <property name="can_focus">False</property>
                             <property name="text" translatable="yes">verbose</property>
                           </object>
@@ -298,6 +299,7 @@ Released under MIT License
                         <property name="halign">start</property>
                         <property name="xalign">0</property>
                         <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="p_toggle" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -515,8 +517,9 @@ Released under MIT License
                           <item id="0e" translatable="yes">strict</item>
                           <item id="1e" translatable="yes">loose</item>
                         </items>
+                        <signal name="changed" handler="strict_e_set" object="strict_e_entry" swapped="no"/>
                         <child internal-child="entry">
-                          <object class="GtkEntry" id="comboboxtext-entry6">
+                          <object class="GtkEntry" id="strict_e_entry">
                             <property name="can_focus">True</property>
                             <property name="text" translatable="yes">strict</property>
                           </object>
@@ -542,8 +545,9 @@ Released under MIT License
                           <item id="1ve" translatable="yes">verbose</item>
                           <item id="2ve" translatable="yes">debug</item>
                         </items>
+                        <signal name="changed" handler="verbose_e_set" object="verbose_e_entry" swapped="no"/>
                         <child internal-child="entry">
-                          <object class="GtkEntry" id="comboboxtext-entry7">
+                          <object class="GtkEntry" id="verbose_e_entry">
                             <property name="can_focus">True</property>
                             <property name="text" translatable="yes">verbose</property>
                           </object>
