@@ -1,10 +1,10 @@
 #	STIDE - hiding secrets in images
 ###	A steganography tool wich features compression, encryption and (almost) non-intrusive hiding techniques.
 
-<img src="media/hips.png" alt="hips screenshots" />
+<img src="media/stide_big.png" alt="Stide screenshots" />
 
 #### MAJOR UPDATE
-- The code is completely rewritten - now fully modular, single binary, lot more options and better responses.
+- Stide is completely rewritten - now fully modular, single binary, lot more options and better responses.
 - Now beside the 'strict' mode with words only from the dictionary we added support of 'loose' mode - which accepts arbitrary ASCII characters for input, at the cost of compression.
 - Fully backwards compatible (use the '-s' switch for 'strict' mode).
 - The old binaries and GUI can be found in bin/linux/old
@@ -53,10 +53,7 @@ you can communicate in privacy without even looking suspicious.
 #### 4. Encryption?
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
-#### 5. More details/ example?
-- Coming soon.
-
-#### 6. Compilation:
+#### 5. Compilation:
 - Compile with 'make' from the 'src' directory. You may need to install sqlite3 headers (for ubuntu this is the 'libsqlite3-dev' package). The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
 - Here is the complete output of 'ldd stide':
 ```
@@ -72,7 +69,7 @@ you can communicate in privacy without even looking suspicious.
 - 'stide.glade' is a .xml file for the GUI settings;
 - 'stide_gtk' is the gtk gui executable - this is basically just an interface to to command line tool.
 
-#### 7. Command line usage:
+#### 6. Command line usage:
 ```
     $./stide
 ```
@@ -88,10 +85,11 @@ you can communicate in privacy without even looking suspicious.
     $./stide -e[svdf] [path/to/stide.db] password img-in
 ```
 
-#### 8. Limitations/TODO/planed upgrades?
-- no windows binaries or gui, although you can compile and run all under cygwin
-- outputs only png or bmp
-- the used png compression is not optimal (WIP) and this can lead to somewhat bigger output
+#### 7. Limitations/TODO/planed upgrades?
+- The hidden secret is *fragile* - meaning the simplest change to the picture will destroy the payload. Of course this can be also a pro, depending on the situation.
+- No windows binaries or gui (WIP), although you can compile and run all under cygwin;
+- Outputs only png or bmp;
+- The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits.
 In numbers - our example cat.png grows from 66 to 85 kB.
 - ~~words not in the dictionary are not supported~~ Use the last command line version 'stide' which supports both - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.

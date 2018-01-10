@@ -18,7 +18,7 @@ void make_fat_pixels(uint8_t rgb, uint32_t pixel, struct image *img);
  */
 int hide(uint32_t *bits_text, uint8_t **payload, struct image *img)
 {
-	if (param.verbose)
+	if (param.debug)
 		printf("\nHiding route (pixel/channel):  \n");
 
 	/* create the pixel-index array and shuffle it */
@@ -33,7 +33,7 @@ int hide(uint32_t *bits_text, uint8_t **payload, struct image *img)
 	uint32_t pixel;		/* pixel number */
 	uint32_t bit_pos;	/* position in payload */
 	for (bit_pos = 0; bit_pos < (*bits_text); bit_pos++) {
-		if (param.verbose)
+		if (param.debug)
 			printf("%i", shuffle_arr[bit_pos]);
 
 		pixel = (img->bpp == 3)
@@ -50,13 +50,13 @@ int hide(uint32_t *bits_text, uint8_t **payload, struct image *img)
 			/* embed */
 			set_bit(rgb, pixel, bit_pos, payload, img);
 		}
-		if (param.verbose)
+		if (param.debug)
 			print_channel(rgb);
 	}
 
-	if (param.verbose)
+	if (param.debug)
 		printf("\n");
-		
+
 	SFREE(shuffle_arr);
 	return 0;
 }

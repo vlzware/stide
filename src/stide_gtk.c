@@ -10,7 +10,7 @@
 #define _GNU_SOURCE
 int asprintf(char **strp, const char *fmt, ...);
 
-char *get_file(void);
+gchar *get_file(void);
 void alert(const char *msg, GtkMessageType type);
 void execute(char *com, int mode);
 
@@ -106,7 +106,7 @@ void on_window_destroy(void)
 /* switch 'strict' in -create- mode */
 void strict_c_set(GtkComboBox *widget, gpointer data)
 {
-	const char *str = gtk_entry_get_text(data);
+	const gchar *str = gtk_entry_get_text(data);
 	_strict_c = (strcmp(str, "loose") == 0)
 		? " " : "-s";
 	g_print("...strict_c: '%s'\n", _strict_c);
@@ -115,7 +115,7 @@ void strict_c_set(GtkComboBox *widget, gpointer data)
 /* switch 'strict' in -extract- mode */
 void strict_e_set(GtkComboBox *widget, gpointer data)
 {
-	const char *str = gtk_entry_get_text(data);
+	const gchar *str = gtk_entry_get_text(data);
 	_strict_e = (strcmp(str, "loose") == 0)
 		? " " : "-s";
 	g_print("...strict_e: '%s'\n", _strict_e);
@@ -124,7 +124,7 @@ void strict_e_set(GtkComboBox *widget, gpointer data)
 /* switch 'verbose'/'debug' -create- mode */
 void verbose_c_set(GtkComboBox *widget, gpointer data)
 {
-	const char *str = gtk_entry_get_text(data);
+	const gchar *str = gtk_entry_get_text(data);
 	_verbose_c = (strcmp(str, "silent") == 0)
 		? " " : (strcmp(str, "verbose") == 0)
 			? "-v" : "-d";
@@ -134,7 +134,7 @@ void verbose_c_set(GtkComboBox *widget, gpointer data)
 /* switch 'verbose'/'debug' -extract- mode */
 void verbose_e_set(GtkComboBox *widget, gpointer data)
 {
-	const char *str = gtk_entry_get_text(data);
+	const gchar *str = gtk_entry_get_text(data);
 	_verbose_e = (strcmp(str, "silent") == 0)
 		? " " : (strcmp(str, "verbose") == 0)
 			? "-v" : "-d";
@@ -151,58 +151,53 @@ void p_toggle(void) {
 /* choose input file for -create- mode */
 void img_c_in_click(void)
 {
-	char *filename = get_file();
-	if (filename) {
+	gchar *filename = get_file();
+	if (filename)
 		gtk_entry_set_text(img_c_in, filename);
-		g_free(filename);
-	}
+	g_free(filename);
 }
 
 /* choose output file for -create- mode */
 void img_c_out_click(void)
 {
-	char *filename = get_file();
-	if (filename) {
+	gchar *filename = get_file();
+	if (filename)
 		gtk_entry_set_text(img_c_out, filename);
-		g_free(filename);
-	}
+	g_free(filename);
 }
 
 /* choose file for -extract- mode */
 void img_e_click(void)
 {
-	char *filename = get_file();
-	if (filename) {
+	gchar *filename = get_file();
+	if (filename)
 		gtk_entry_set_text(img_e, filename);
-		g_free(filename);
-	}
+	g_free(filename);
 }
 
 /* choose db for -create- mode */
 void db_c_click()
 {
-	char *filename = get_file();
-	if (filename) {
+	gchar *filename = get_file();
+	if (filename)
 		gtk_entry_set_text(db_c, filename);
-		g_free(filename);
-	}
+	g_free(filename);
 }
 
 /* choose db for -extract- mode */
 void db_e_click()
 {
-	char *filename = get_file();
-	if (filename) {
+	gchar *filename = get_file();
+	if (filename)
 		gtk_entry_set_text(db_e, filename);
-		g_free(filename);
-	}
+	g_free(filename);
 }
 
 /* choose file */
-char *get_file(void)
+gchar *get_file(void)
 {
 	GtkWidget *dialog;
-	char *filename = NULL;
+	gchar *filename = NULL;
 
 	dialog = gtk_file_chooser_dialog_new("Open File", NULL,
 					     GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -232,7 +227,7 @@ void check_fields_c(void)
 		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *cmd;              /* -s -p -v -d -f db  pass   msg   in out */
+	char *cmd = NULL;       /* -s -p -v -d -f db  pass   msg   in out */
 	asprintf(&cmd, "./stide -c %s %s %s %s -f %s \"%s\" \"%s\" %s %s 2>&1",
 		_strict_c,
 		_p,
@@ -243,6 +238,10 @@ void check_fields_c(void)
 		gtk_entry_get_text(msg),
 		gtk_entry_get_text(img_c_in),
 		gtk_entry_get_text(img_c_out));
+	if (cmd == NULL) {
+		g_print("Memory error!\n");
+		exit(1);
+	}
 	g_print("Calling stide with: %s", cmd);
 	g_print("\n");
 	execute(cmd, CREATE);
@@ -257,7 +256,7 @@ void check_fields_e(void)
 		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *cmd;              /* -s -v -d -f db  pass  in */
+	char *cmd = NULL;       /* -s -v -d -f db  pass  in */
 	asprintf(&cmd, "./stide -e %s %s %s -f %s \"%s\" %s 2>&1",
 		_strict_e,
 		_verbose_e,
@@ -265,6 +264,10 @@ void check_fields_e(void)
 		gtk_entry_get_text(db_e),
 		gtk_entry_get_text(pass_e),
 		gtk_entry_get_text(img_e));
+	if (cmd == NULL) {
+		g_print("Memory error!\n");
+		exit(1);
+	}
 	g_print("Calling stide with: %s", cmd);
 	g_print("\n");
 	execute(cmd, EXTRACT);
