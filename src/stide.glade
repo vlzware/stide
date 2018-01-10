@@ -30,6 +30,7 @@ Released under MIT License
 </property>
   </object>
   <object class="GtkTextBuffer" id="buff_c"/>
+  <object class="GtkTextBuffer" id="buff_e"/>
   <object class="GtkWindow" id="window_main">
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
@@ -601,7 +602,7 @@ Released under MIT License
                         <property name="vexpand">True</property>
                         <property name="editable">False</property>
                         <property name="wrap_mode">word-char</property>
-                        <property name="buffer">buff_c</property>
+                        <property name="buffer">buff_e</property>
                         <property name="monospace">True</property>
                       </object>
                     </child>
@@ -676,5 +677,4 @@ Released under MIT License
       </object>
     </child>
   </object>
-  <object class="GtkTextBuffer" id="buff_e"/>
 </interface>

@@ -10,9 +10,16 @@
 #define _GNU_SOURCE
 int asprintf(char **strp, const char *fmt, ...);
 
-char *get_file();
-void on_error();
-void execute(char *com, int where);
+char *get_file(void);
+void alert(const char *msg, GtkMessageType type);
+void execute(char *com, int mode);
+
+/* GUI definitions */
+#define GUIXML "stide.glade"
+
+/* op modes */
+#define CREATE 0
+#define EXTRACT 1
 
 /* global references */
 GtkWidget *window;
@@ -49,7 +56,7 @@ int main(int argc, char *argv[])
 	gtk_init(&argc, &argv);
 
 	builder = gtk_builder_new();
-	gtk_builder_add_from_file(builder, "stide.glade", NULL);
+	gtk_builder_add_from_file(builder, GUIXML, NULL);
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
 	gtk_builder_connect_signals(builder, NULL);
@@ -91,7 +98,7 @@ int main(int argc, char *argv[])
 }
 
 /* called when window is closed */
-void on_window_destroy()
+void on_window_destroy(void)
 {
 	gtk_main_quit();
 }
@@ -142,7 +149,7 @@ void p_toggle(void) {
 }
 
 /* choose input file for -create- mode */
-void img_c_in_click()
+void img_c_in_click(void)
 {
 	char *filename = get_file();
 	if (filename) {
@@ -152,7 +159,7 @@ void img_c_in_click()
 }
 
 /* choose output file for -create- mode */
-void img_c_out_click()
+void img_c_out_click(void)
 {
 	char *filename = get_file();
 	if (filename) {
@@ -162,7 +169,7 @@ void img_c_out_click()
 }
 
 /* choose file for -extract- mode */
-void img_e_click()
+void img_e_click(void)
 {
 	char *filename = get_file();
 	if (filename) {
@@ -192,7 +199,7 @@ void db_e_click()
 }
 
 /* choose file */
-char *get_file()
+char *get_file(void)
 {
 	GtkWidget *dialog;
 	char *filename = NULL;
@@ -217,16 +224,16 @@ char *get_file()
 }
 
 /* check if all fields are filled (create) and execute */
-void check_fields_c()
+void check_fields_c(void)
 {
 	if (strlen(gtk_entry_get_text(pass_c)) == 0
 	    || strlen(gtk_entry_get_text(img_c_in)) == 0
 	    || strlen(gtk_entry_get_text(msg)) == 0) {
-		on_error();
+		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *t;              /* -s -p -v -d -f db  pass   msg   in out */
-	asprintf(&t, "./stide -c %s %s %s %s -f %s \"%s\" \"%s\" %s %s 2>&1",
+	char *cmd;              /* -s -p -v -d -f db  pass   msg   in out */
+	asprintf(&cmd, "./stide -c %s %s %s %s -f %s \"%s\" \"%s\" %s %s 2>&1",
 		_strict_c,
 		_p,
 		_verbose_c,
@@ -236,48 +243,54 @@ void check_fields_c()
 		gtk_entry_get_text(msg),
 		gtk_entry_get_text(img_c_in),
 		gtk_entry_get_text(img_c_out));
-	g_print("Calling stide with: %s", t);
+	g_print("Calling stide with: %s", cmd);
 	g_print("\n");
-	execute(t, 0);
-	free(t);
+	execute(cmd, CREATE);
+	free(cmd);
 }
 
 /* check if all fields are filled (extract) and execute */
-void check_fields_e()
+void check_fields_e(void)
 {
 	if (strlen(gtk_entry_get_text(pass_e)) == 0
 	    || strlen(gtk_entry_get_text(img_e)) == 0) {
-		on_error();
+		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *t;              /* -s -v -d -f db  pass  in */
-	asprintf(&t, "./stide -e %s %s %s -f %s \"%s\" %s 2>&1",
+	char *cmd;              /* -s -v -d -f db  pass  in */
+	asprintf(&cmd, "./stide -e %s %s %s -f %s \"%s\" %s 2>&1",
 		_strict_e,
 		_verbose_e,
 		_debug_e,
 		gtk_entry_get_text(db_e),
 		gtk_entry_get_text(pass_e),
 		gtk_entry_get_text(img_e));
-	g_print("Calling stide with: %s", t);
+	g_print("Calling stide with: %s", cmd);
 	g_print("\n");
-	execute(t, 0);
-	free(t);
+	execute(cmd, EXTRACT);
+	free(cmd);
 }
 
-/* simple error pop-up */
-void on_error()
+/* simple alert pop-up */
+void alert(const char *msg, GtkMessageType type)
 {
-	GtkWidget *dialog = gtk_message_dialog_new(NULL,
-						   GTK_DIALOG_DESTROY_WITH_PARENT,
-						   GTK_MESSAGE_ERROR,
-						   GTK_BUTTONS_CLOSE,
-						   "All input fields are required!");
+	GtkWidget *dialog;
+	dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+					 type, GTK_BUTTONS_CLOSE,
+					 "%s", msg);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 }
 
+/* scroll window */
+void scroll(GtkTextView *view, GtkTextBuffer *buff)
+{
+	gtk_text_view_scroll_to_mark(view, gtk_text_buffer_get_insert(buff),
+				     0.0, TRUE, 0, 1);
+}
+
 /* execute command */
-void execute(char *com, int where)
+void execute(char *com, int mode)
 {
 	FILE *in;
 	extern FILE *popen();
@@ -288,30 +301,23 @@ void execute(char *com, int where)
 	}
 
 	while (fgets(buff, sizeof(buff), in) != NULL) {
-		if (where == 0) {
+		if (mode == CREATE)
 			gtk_text_buffer_insert_at_cursor(buff_c, buff,
 							 strlen(buff));
-			gtk_text_view_scroll_to_mark(term_c,
-						     gtk_text_buffer_get_insert
-						     (buff_c), 0.0, TRUE,
-						     0.5, 0.5);
-		} else {
+		else
 			gtk_text_buffer_insert_at_cursor(buff_e, buff,
 							 strlen(buff));
-			gtk_text_view_scroll_to_mark(term_e,
-						     gtk_text_buffer_get_insert
-						     (buff_e), 0.0, TRUE,
-						     0.5, 0.5);
-		}
 	}
-	if (where == 0) {
+
+	if (mode == CREATE) {
 		gtk_text_buffer_insert_at_cursor(buff_c, "\n\n",
 						 sizeof(char) * 2);
+		scroll(term_c, buff_c);
 	} else {
 		gtk_text_buffer_insert_at_cursor(buff_e, "\n\n",
 						 sizeof(char) * 2);
+		scroll(term_e, buff_e);
 	}
 
 	g_print("Exit code: %i\n", WEXITSTATUS(pclose(in)));
-	//pclose(in);
 }
