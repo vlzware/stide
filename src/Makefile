@@ -12,7 +12,7 @@ EXE = stide
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
-LIBS = -l sqlite3 -l m
+LIBS = -lsqlite3 -lm -lpng
 
 # space-separated list of source files
 SRCS = stide.c helpers.c preprocess.c image.c hide.c create.c extract.c
