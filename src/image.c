@@ -127,11 +127,12 @@ int _img_save_libpng(struct image *img)
 			8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
 			PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
+	png_set_compression_level(png_ptr, 15);
 	png_write_info(png_ptr, info_ptr);
 
 	/* Write image data */
-	/* TODO; WRONG! FIX IT */
-	png_write_image(png_ptr, &img->rgb);
+	/* TODO: WRONG! FIX IT */
+	png_write_row(png_ptr, img->rgb);
 
 	/* End write */
 	png_write_end(png_ptr, NULL);
