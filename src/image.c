@@ -87,6 +87,7 @@ int _img_save_libpng(struct image *img)
 	FILE *fp = NULL;
 	png_structp png_ptr = NULL;
 	png_infop info_ptr = NULL;
+	png_bytep row = NULL;
 
 	/* Open file for writing (binary mode) */
 	fp = fopen(param.image_out, "wb");
@@ -127,20 +128,32 @@ int _img_save_libpng(struct image *img)
 			8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
 			PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
-	png_set_compression_level(png_ptr, 15);
 	png_write_info(png_ptr, info_ptr);
 
 	/* Write image data */
 	/* TODO: WRONG! FIX IT */
-	png_write_row(png_ptr, img->rgb);
+	row = (png_bytep) malloc(img->bpp * img->width * sizeof(png_byte));
+	int x, y, bit_pos;
+	bit_pos = 0;
+	for (y = 0; y < img->height; y++) {
+		for (x = 0 ; x < img->width ; x++) {
+			row[x * img->bpp] = img->rgb[bit_pos];
+			bit_pos ++;
+		}
+		png_write_row(png_ptr, row);
+	}
+	SFREE(row);
 
 	/* End write */
 	png_write_end(png_ptr, NULL);
 
 	finalise:
-	if (fp != NULL) fclose(fp);
-	if (info_ptr != NULL) png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-	if (png_ptr != NULL) png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+	if (fp != NULL)
+		fclose(fp);
+	if (info_ptr != NULL)
+		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+	if (png_ptr != NULL)
+		png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
 
 	return code;
 }
