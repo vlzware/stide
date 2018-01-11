@@ -80,6 +80,7 @@ int _img_save_stb(struct image *img)
 	return 0;
 }
 
+/* http://www.labbookpages.co.uk/software/imgProc/libPNG.html */
 int _img_save_libpng(struct image *img)
 {
 	int code = 0;
