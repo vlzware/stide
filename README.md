@@ -14,9 +14,10 @@
 
 #### QUICK START:
 - this works only on linux (Windows support comes at some point later),
+- eventually install the dependencies: Stide uses libsqlite3-devel and libpng,
 - [get this archive](https://github.com/vlzware/HIPS-steganography-tool/blob/master/releases/hips_bin_1.0.0.tar.gz)
 - extract the archive and then start hips_gtk,
-- OR for the **latest and much better command line version** clone the repository and compile by yourself (see "Compiling").
+- OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
 #### for creating image with embedded secret message:
 1. use the **create** tab;
 2. set input and output image:
@@ -54,12 +55,13 @@ you can communicate in privacy without even looking suspicious.
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
 #### 5. Compilation:
-- Compile with 'make' from the 'src' directory. You may need to install sqlite3 headers (for ubuntu this is the 'libsqlite3-dev' package). The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
+- Compile with 'make' from the 'src' directory. You may need to install sqlite3 and libpng headers (for ubuntu this is the 'libsqlite3-dev' and 'libpng-dev' packages). The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
 - Here is the complete output of 'ldd stide':
 ```
 	linux-vdso.so.1 =>  (0x00007ffc7b77e000)
 	libsqlite3.so.0 => /usr/lib/x86_64-linux-gnu/libsqlite3.so.0 (0x00007efffb687000)
 	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007efffb37e000)
+    libpng12.so.0 => /lib/x86_64-linux-gnu/libpng12.so.0 (0x00007fd64f121000)
 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007efffafb3000)
 	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007efffad96000)
 	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007efffab92000)
@@ -67,7 +69,7 @@ you can communicate in privacy without even looking suspicious.
 
 ```
 - 'stide.glade' is a .xml file for the GUI settings;
-- 'stide_gtk' is the gtk gui executable - this is basically just an interface to to command line tool.
+- 'stide_gtk' is the gtk gui executable - this is basically just an interface to the command line tool.
 
 #### 6. Command line usage:
 ```
@@ -86,15 +88,15 @@ you can communicate in privacy without even looking suspicious.
 ```
 
 #### 7. Limitations/TODO/planed upgrades?
-- The hidden secret is *fragile* - meaning the simplest change to the picture will destroy the payload. Of course this can be also a pro, depending on the situation.
+- The hidden secret is *fragile* - meaning the simplest change to the picture will destroy the payload. Note: this can be also a pro, depending on the situation;
 - No windows binaries or gui (WIP), although you can compile and run all under cygwin;
 - Outputs only png or bmp;
-- The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
-which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits.
-In numbers - our example cat.png grows from 66 to 85 kB.
-- ~~words not in the dictionary are not supported~~ Use the last command line version 'stide' which supports both - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
+- ~~The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
+which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits. In numbers - our example cat.png grows from 66 to 85 kB.~~ Stide switched to libpng, so there is no more png compression penalty on the output.
+- ~~words not in the dictionary are not supported~~ Stide now supports both modes - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
 	
 ### CREDITS:
+- Stide uses [libpng](http://libpng.org/pub/png/libpng.html). The code for saving in png is mostly from [here](http://www.labbookpages.co.uk/software/imgProc/libPNG.html).
 
 - Stide uses the stb_image and stb_image_write libraries from: [STB](https://github.com/nothings/stb/).
 
@@ -108,4 +110,4 @@ DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 08.01.2018
+last updated: 12.01.2018

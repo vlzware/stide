@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <png.h>
 
+/* change this to 0 to use stb for image writing */
+#define USELIBPNG 1
+
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image.h"
@@ -33,8 +36,9 @@ int img_unload(struct image *img)
 int img_save(struct image *img)
 {
 	if (param.out_ext == extPNG) {
-		return _img_save_stb(img);
-		// return _img_save_libpng(img);
+		return USELIBPNG
+			? _img_save_libpng(img)
+			: _img_save_stb(img);
 	} else {
 		/* defaults to bmp write with stb */
 		if (!stbi_write_bmp(param.image_out,
@@ -80,7 +84,11 @@ int _img_save_stb(struct image *img)
 	return 0;
 }
 
-/* http://www.labbookpages.co.uk/software/imgProc/libPNG.html */
+/*
+ * Write an image using libpng.
+ * Mostly based on:
+ * http://www.labbookpages.co.uk/software/imgProc/libPNG.html
+ */
 int _img_save_libpng(struct image *img)
 {
 	int code = 0;
@@ -131,14 +139,18 @@ int _img_save_libpng(struct image *img)
 	png_write_info(png_ptr, info_ptr);
 
 	/* Write image data */
-	/* TODO: WRONG! FIX IT */
-	row = (png_bytep) malloc(img->bpp * img->width * sizeof(png_byte));
+	row = (png_bytep) malloc(img->bpp * img->width * sizeof(uint8_t));
+	if (row == NULL) {
+		printf("(!) Memory error in _img_save_libpng\n");
+		code = 1;
+		goto finalise;
+	}
 	int x, y, bit_pos;
 	bit_pos = 0;
 	for (y = 0; y < img->height; y++) {
-		for (x = 0 ; x < img->width ; x++) {
-			row[x * img->bpp] = img->rgb[bit_pos];
-			bit_pos ++;
+		for (x = 0; x < (img->width * img->bpp); x++) {
+			row[x] = img->rgb[bit_pos];
+			bit_pos++;
 		}
 		png_write_row(png_ptr, row);
 	}
@@ -150,8 +162,10 @@ int _img_save_libpng(struct image *img)
 	finalise:
 	if (fp != NULL)
 		fclose(fp);
-	if (info_ptr != NULL)
+	if (info_ptr != NULL) {
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+		png_destroy_info_struct(png_ptr, &info_ptr);
+	}
 	if (png_ptr != NULL)
 		png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
 
