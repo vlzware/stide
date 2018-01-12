@@ -37,4 +37,4 @@ stide_gtk: stide_gtk.c
 clean:
 	rm -f core $(EXE) *.o *.gch
 	rm -f ../bin/linux/stide*
-	rm -f ../bin/*.png
+	rm -f ../bin/linux/*.png
