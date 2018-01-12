@@ -61,7 +61,7 @@ you can communicate in privacy without even looking suspicious.
 	linux-vdso.so.1 =>  (0x00007ffc7b77e000)
 	libsqlite3.so.0 => /usr/lib/x86_64-linux-gnu/libsqlite3.so.0 (0x00007efffb687000)
 	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007efffb37e000)
-    libpng12.so.0 => /lib/x86_64-linux-gnu/libpng12.so.0 (0x00007fd64f121000)
+    	libpng12.so.0 => /lib/x86_64-linux-gnu/libpng12.so.0 (0x00007fd64f121000)
 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007efffafb3000)
 	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007efffad96000)
 	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007efffab92000)
