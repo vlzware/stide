@@ -91,6 +91,10 @@ int _img_save_stb(struct image *img)
  */
 int _img_save_libpng(struct image *img)
 {
+	/* TODO: fix the libpng code to work with RGBA */
+	if (img->bpp == 4)
+		return _img_save_stb(img);
+
 	int code = 0;
 	FILE *fp = NULL;
 	png_structp png_ptr = NULL;
