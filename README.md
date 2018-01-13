@@ -14,9 +14,9 @@
 
 #### QUICK START:
 - this works only on linux (Windows support comes at some point later),
-- eventually install the dependencies: Stide uses libsqlite3-devel and libpng,
-- [get this archive](https://github.com/vlzware/HIPS-steganography-tool/blob/master/releases/hips_bin_1.0.0.tar.gz)
-- extract the archive and then start hips_gtk,
+- eventually install the dependencies: Stide uses libsqlite3-devel and libpng (```sudo apt-get install libsqlite3-dev libpng-dev```),
+- [get this archive](https://github.com/vlzware/stide/blob/master/releases/stide_bin_2.0.tar.gz)
+- extract the archive and then start stide_gtk,
 - OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
 #### for creating image with embedded secret message:
 1. use the **create** tab;
@@ -54,8 +54,8 @@ you can communicate in privacy without even looking suspicious.
 #### 4. Encryption?
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
-#### 5. Compilation:
-- Compile with 'make' from the 'src' directory. You may need to install sqlite3 and libpng headers (for ubuntu this is the 'libsqlite3-dev' and 'libpng-dev' packages). The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
+#### 5. Compiling:
+- Compile with 'make' from the 'src' directory. You may need to install sqlite3 and libpng headers. The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
 - Here is the complete output of 'ldd stide':
 ```
 	linux-vdso.so.1 =>  (0x00007ffc7b77e000)
@@ -102,7 +102,7 @@ which has nothing to do with the inserted hidden data. Stide adds --nothing-- to
 
 - This tool was (originally) made as my final project in [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x).
 
-- The 10 000 words dictionary is from [Josh Kaufman](https://github.com/first20hours/google-10000-english) (I added small number of words at the end like my name and hips_eof) Data files are derived from the Google Web Trillion Word Corpus, as described by Thorsten Brants and Alex Franz, and distributed by the Linguistic Data Consortium. Subsets of this corpus distributed by Peter Novig. Corpus editing and cleanup by Josh Kaufman.
+- The 10 000 words dictionary is from [Josh Kaufman](https://github.com/first20hours/google-10000-english) (I added small number of words at the end like my name and stide_eof) Data files are derived from the Google Web Trillion Word Corpus, as described by Thorsten Brants and Alex Franz, and distributed by the Linguistic Data Consortium. Subsets of this corpus distributed by Peter Novig. Corpus editing and cleanup by Josh Kaufman.
 
 - the sample picture 'cat.png' was taken from http://www.freeimages.com
 
