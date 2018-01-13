@@ -225,7 +225,7 @@ uint8_t sql_get(char *id, char *word, char **res)
 	sqlite3 *db;
 	uint8_t rc;
 	sqlite3_stmt *stmt;
-	int maxquery = 100;
+	const int maxquery = 100;
 	char sqlcmd[maxquery];
 
 	/* open the database */
