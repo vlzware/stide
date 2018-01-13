@@ -91,20 +91,20 @@ int _img_save_stb(struct image *img)
  */
 int _img_save_libpng(struct image *img)
 {
-	/* TODO: fix the libpng code to work with RGBA */
-	if (img->bpp == 4)
-		return _img_save_stb(img);
-
 	int code = 0;
 	FILE *fp = NULL;
 	png_structp png_ptr = NULL;
 	png_infop info_ptr = NULL;
 	png_bytep row = NULL;
+	const int color_type = (img->bpp == 3)
+			? PNG_COLOR_TYPE_RGB
+			: PNG_COLOR_TYPE_RGB_ALPHA;
 
 	/* Open file for writing (binary mode) */
 	fp = fopen(param.image_out, "wb");
 	if (fp == NULL) {
-		printf("(!) Could not open %s for writing\n", param.image_out);
+		printf("(!) Could not open %s for writing\n",
+			param.image_out);
 		code = 1;
 		goto finalise;
 	}
@@ -135,9 +135,10 @@ int _img_save_libpng(struct image *img)
 
 	png_init_io(png_ptr, fp);
 
+
 	/* Write header (8 bit colour depth) */
 	png_set_IHDR(png_ptr, info_ptr, img->width, img->height,
-			8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+			8, color_type, PNG_INTERLACE_NONE,
 			PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
 	png_write_info(png_ptr, info_ptr);
