@@ -15,9 +15,9 @@
 #include "stide.h"
 
 int _img_load_stb(struct image *img);
-// int _img_load_libpng(struct image *img);
 int _img_unload_stb(struct image *img);
-int _img_unload_libpng(struct image *img);
+// int _img_load_libpng(struct image *img);
+// int _img_unload_libpng(struct image *img);
 int _img_save_stb(struct image *img);
 int _img_save_libpng(struct image *img);
 
