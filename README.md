@@ -15,7 +15,7 @@
 #### QUICK START:
 - this works only on linux (Windows support comes at some point later),
 - eventually install the dependencies: Stide uses libsqlite3-devel and libpng (```sudo apt-get install libsqlite3-dev libpng-dev```),
-- [get this archive](https://github.com/vlzware/stide/blob/master/releases/stide_bin_2.0.tar.gz)
+- [get this archive](https://github.com/vlzware/stide/blob/master/releases/stide_bin_2.0.tar.gz?raw=true)
 - extract the archive and then start stide_gtk,
 - OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
 #### for creating image with embedded secret message:
