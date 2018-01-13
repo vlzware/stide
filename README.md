@@ -10,7 +10,6 @@
 - The old binaries and GUI can be found in bin/linux/old
 - Changed license to MIT.
 - Name changed because we found some old project on the internet with the same name.
-- More info, updated GUI and Windows binaries coming soon!
 
 #### QUICK START:
 - this works only on linux (Windows support comes at some point later),
