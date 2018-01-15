@@ -95,7 +95,9 @@ which has nothing to do with the inserted hidden data. Stide adds --nothing-- to
 - ~~words not in the dictionary are not supported~~ Stide now supports both modes - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
 	
 ### CREDITS:
-- Stide uses a static build of [libpng](http://libpng.org/pub/png/libpng.html). The code for saving in png is mostly from [here](http://www.labbookpages.co.uk/software/imgProc/libPNG.html).
+- Stide uses [sqlite3](https://sqlite.org/),
+
+- also a static build of [libpng](http://libpng.org/pub/png/libpng.html). The code for saving in png is mostly from [here](http://www.labbookpages.co.uk/software/imgProc/libPNG.html).
 
 - For the needs of libpng, stide compiles also with a static build of [zlib](http://zlib.net/).
 
