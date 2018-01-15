@@ -12,10 +12,11 @@ EXE = stide
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
-LIBS = -lsqlite3 -lm -lpng
+LIBS = -lm -lpng -lpthread -ldl
 
 # space-separated list of source files
-SRCS = stide.c helpers.c preprocess.c image.c hide.c create.c extract.c
+SRCS = stide.c helpers.c preprocess.c image.c hide.c create.c extract.c \
+	../lib/sqlite3.c
 
 # automatically generated list of object files
 OBJS = $(SRCS:.c=.o)
@@ -36,5 +37,6 @@ stide_gtk: stide_gtk.c
 # housekeeping
 clean:
 	rm -f core $(EXE) *.o *.gch
+	rm -f ../lib/*.o
 	rm -f ../bin/linux/stide*
 	rm -f ../bin/linux/*.png

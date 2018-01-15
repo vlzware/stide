@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <sqlite3.h>
+#include "../lib/sqlite3.h"
 #include <string.h>
 #include "stide.h"
 
