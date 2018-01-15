@@ -10,11 +10,11 @@
 - The old binaries and GUI can be found in bin/linux/old
 - Changed license to MIT.
 - Name changed because we found some old project on the internet with the same name.
+- Build with sqlite3, zlib and libpng as static libs to be even more easy to use - no dependancies.
 
 #### QUICK START:
-- this works only on linux (Windows support comes at some point later),
-- eventually install the dependencies: Stide uses libsqlite3-devel and libpng (```sudo apt-get install libsqlite3-dev libpng-dev```),
-- [get this archive](https://github.com/vlzware/stide/blob/master/releases/stide_bin_2.0.tar.gz?raw=true)
+- this works only on 64 bit linux (32 bit Linux / Windows support comes at some point later),
+- [get this archive](https://github.com/vlzware/stide/blob/master/releases/stide_bin_x64_2.1.tar.gz?raw=true)
 - extract the archive and then start stide_gtk,
 - OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
 #### for creating image with embedded secret message:
@@ -55,12 +55,12 @@ you can communicate in privacy without even looking suspicious.
 
 #### 5. Compiling:
 - Compile with 'make' from the 'src' directory. You may need to install sqlite3 and libpng headers. The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
+- Stide uses statically builded versions of zlib and libpng.
+- sqlite3 source and headers are also compiled.
 - Here is the complete output of 'ldd stide':
 ```
 	linux-vdso.so.1 =>  (0x00007ffc7b77e000)
-	libsqlite3.so.0 => /usr/lib/x86_64-linux-gnu/libsqlite3.so.0 (0x00007efffb687000)
 	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007efffb37e000)
-    	libpng12.so.0 => /lib/x86_64-linux-gnu/libpng12.so.0 (0x00007fd64f121000)
 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007efffafb3000)
 	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007efffad96000)
 	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007efffab92000)
@@ -95,7 +95,9 @@ which has nothing to do with the inserted hidden data. Stide adds --nothing-- to
 - ~~words not in the dictionary are not supported~~ Stide now supports both modes - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
 	
 ### CREDITS:
-- Stide uses [libpng](http://libpng.org/pub/png/libpng.html). The code for saving in png is mostly from [here](http://www.labbookpages.co.uk/software/imgProc/libPNG.html).
+- Stide uses a static build of [libpng](http://libpng.org/pub/png/libpng.html). The code for saving in png is mostly from [here](http://www.labbookpages.co.uk/software/imgProc/libPNG.html).
+
+- For the needs of libpng, stide compiles also with a static build of [zlib](http://zlib.net/).
 
 - Stide uses the stb_image and stb_image_write libraries from: [STB](https://github.com/nothings/stb/).
 
@@ -109,4 +111,4 @@ DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 12.01.2018
+last updated: 15.01.2018
