@@ -16,7 +16,8 @@
 - this works only on 64 bit linux (32 bit Linux / Windows support comes at some point later),
 - [get this archive](https://github.com/vlzware/stide/blob/master/releases/stide_bin_x64_2.1.tar.gz?raw=true)
 - extract the archive and then start stide_gtk,
-- OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
+- OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling"). Note: the current version is not backwards-compatible.
+
 #### for creating image with embedded secret message:
 1. use the **create** tab;
 2. set input and output image:
@@ -54,7 +55,8 @@ you can communicate in privacy without even looking suspicious.
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
 #### 5. Compiling:
-- Compile with 'make' from the 'src' directory. You may need to install sqlite3 and libpng headers. The resulting binaries (stide and stide_gtk) reside in 'bin/linux'.
+- On windows use MinGW with mingw32-pthreads-w32.
+- Compile with 'make -f [Makefile]' with the proper Makefile for your platform in the 'src' directory. The resulting binaries - stide (and stide_gtk if on linux) reside in 'bin/[platform]'.
 - Stide uses statically builded versions of zlib and libpng.
 - sqlite3 source and headers are also compiled.
 - Here is the complete output of 'ldd stide':
@@ -97,9 +99,11 @@ which has nothing to do with the inserted hidden data. Stide adds --nothing-- to
 ### CREDITS:
 - Stide uses [sqlite3](https://sqlite.org/),
 
-- also a static build of [libpng](http://libpng.org/pub/png/libpng.html). The code for saving in png is mostly from [here](http://www.labbookpages.co.uk/software/imgProc/libPNG.html).
+- A static build of [libpng](http://libpng.org/pub/png/libpng.html). The code for saving in png is mostly from [here](http://www.labbookpages.co.uk/software/imgProc/libPNG.html).
 
 - For the needs of libpng, stide compiles also with a static build of [zlib](http://zlib.net/).
+
+- Also using on windows: static build of [libdl](https://github.com/dlfcn-win32/dlfcn-win32).
 
 - Stide uses the stb_image and stb_image_write libraries from: [STB](https://github.com/nothings/stb/).
 
@@ -113,4 +117,4 @@ DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 15.01.2018
+last updated: 18.01.2018

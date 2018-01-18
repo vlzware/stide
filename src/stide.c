@@ -1,19 +1,5 @@
 /**
- * stide:
- * 	steganography tool featuring heavy compression,
- * 	ecryption and (almost) non-invasive hiding techniques
- *
- * author:
- * 	jelezarov.vladimir@gmail.com
- *
- * - started as a final project on CS50 2017
- * 	https://cs50.harvard.edu/
- * - using a dictionary (10 000 most common words) from:
- * 	https://github.com/first20hours/google-10000-english
- * - the stb library from here:
- * 	https://github.com/nothings/stb/
- * - and libpng:
- * 	http://libpng.org/pub/png/libpng.html
+ * Stide: main routine
  */
 
 #include <stdio.h>

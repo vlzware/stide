@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "../lib/sqlite3/sqlite3.h"
+#include "../include/sqlite3.h"
 #include "stide.h"
 
 /* http://stackoverflow.com/a/3208376/6049386 */
@@ -55,7 +55,7 @@ long rand_at_most(long max)
 
 	long x;
 	do {
-		x = random();
+		x = rand();
 	}
 	/* This is carefully written not to overflow */
 	while (num_rand - defect <= (unsigned long)x);
@@ -241,7 +241,7 @@ uint8_t sql_get(char *id, char *word, char **res)
 		return 3;
 
 	/* execute SQL statement */
-	rc = sqlite3_prepare_v2(db, sqlcmd, 1000, &stmt, 0);
+	rc = sqlite3_prepare_v2(db, sqlcmd, -1, &stmt, 0);
 	if (rc != SQLITE_OK) {
 		printf("(!) SQL error: \"%s\"\n", sqlite3_errmsg(db));
 		sqlite3_close(db);

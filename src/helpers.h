@@ -3,7 +3,7 @@
  */
 
 #include <stdint.h>
-#include "../lib/sqlite3/sqlite3.h"
+#include "../include/sqlite3.h"
 
 /**
  * djb2 hash algorithm by dan bernstein:

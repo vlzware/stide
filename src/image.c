@@ -3,15 +3,15 @@
  */
 
 #include <stdio.h>
-#include "../lib/libpng/png.h"
+#include "../include/png.h"
 
 /* change this to 0 to use stb for image writing */
 #define USELIBPNG 1
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "../lib/stb/stb_image.h"
-#include "../lib/stb/stb_image_write.h"
+#include "../include/stb_image.h"
+#include "../include/stb_image_write.h"
 #include "stide.h"
 
 int _img_load_stb(struct image *img);
