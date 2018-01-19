@@ -12,7 +12,7 @@ EXE = stide
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
-LIBS = -L../lib/win_64 -lpthread -ldl -lpng -lz -lm
+LIBS = -L../lib/win_64 -lpthread -ldl -lpng -lz -lm -lsodium
 
 # space-separated list of source files
 SRCS = stide.c helpers.c preprocess.c image.c hide.c \

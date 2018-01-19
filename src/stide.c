@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include "../include/sodium.h"
 #include "stide.h"
 #include "helpers.h"
 
@@ -77,6 +78,12 @@ int main(int argc, char *argv[])
 		printf(" just show the distribution!\n\n");
 	} else {
 		printf("\n");
+	}
+
+	/* init sodium */
+	if (sodium_init() < 0) {
+		printf("(!) Not enough entropy! Exiting!\n");
+		exit(1);
 	}
 
 	/* seed using hash from the password */
