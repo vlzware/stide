@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "../include/random.h"
 #include "../include/sqlite3.h"
 #include "stide.h"
 
@@ -41,27 +42,25 @@ uint32_t hash(const char *str)
 /**
  * Return random number in the closed interval [0, max]
  * https://stackoverflow.com/a/6852396/6049386
- *
- * Assumes 0 <= max <= RAND_MAX
  */
 long rand_at_most(long max)
 {
-	/* max <= RAND_MAX < ULONG_MAX, so this is okay. */
 	unsigned long
-	    num_bins = (unsigned long)max + 1,
-	    num_rand = (unsigned long)RAND_MAX + 1,
-	    bin_size = num_rand / num_bins,
-	    defect = num_rand % num_bins;
+		/* max <= LONG_MAX < ULONG_MAX, so this is okay. */
+		num_bins = (unsigned long) max + 1,
+		num_rand = (unsigned long) LONG_MAX + 1,
+		bin_size = num_rand / num_bins,
+		defect   = num_rand % num_bins;
 
 	long x;
 	do {
-		x = rand();
+		x = random();
 	}
 	/* This is carefully written not to overflow */
 	while (num_rand - defect <= (unsigned long)x);
 
 	/* Truncated division is intentional */
-	return x / bin_size;
+	return x/bin_size;
 }
 
 /**

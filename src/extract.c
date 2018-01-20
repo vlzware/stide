@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "../include/random.h"
 #include "helpers.h"
 #include "stide.h"
 
@@ -82,7 +83,7 @@ void get_payload_bit(uint8_t *payload, uint8_t bit_pos, uint32_t pixel,
 	rgb = rand_at_most(2);
 
 	/* extract the payload */
-	payload[bit_pos] = img->rgb[pixel + rgb] ^ (1 & rand());
+	payload[bit_pos] = img->rgb[pixel + rgb] ^ (1 & random());
 }
 
 /**

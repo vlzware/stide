@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "../include/sodium.h"
+#include "../include/random.h"
 #include "stide.h"
 #include "helpers.h"
 
@@ -80,15 +80,9 @@ int main(int argc, char *argv[])
 		printf("\n");
 	}
 
-	/* init sodium */
-	if (sodium_init() < 0) {
-		printf("(!) Not enough entropy! Exiting!\n");
-		exit(1);
-	}
-
 	/* seed using hash from the password */
 	uint32_t pass_hash = hash(param.pass);
-	srand(pass_hash);
+	srandom(pass_hash);
 	if (param.verbose)
 		printf("Hashed pass: %u\n\n", pass_hash);
 

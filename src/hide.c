@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "../include/random.h"
 #include "stide.h"
 #include "helpers.h"
 
@@ -74,7 +75,7 @@ void set_bit(uint8_t rgb, uint32_t pixel, uint32_t bit_pos,
 	uint8_t mask = img->rgb[pos] & ~1;
 
 	/* bit to hide xored with a random number */
-	uint8_t bit_xor = (*payload)[bit_pos] ^ (1 & rand());
+	uint8_t bit_xor = (*payload)[bit_pos] ^ (1 & random());
 
 	/* build */
 	img->rgb[pos] = mask | bit_xor;

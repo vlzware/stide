@@ -4,19 +4,18 @@
 CC = gcc
 
 # flags to pass compiler
-CFLAGS = -g -O0 -Wall -Wextra -pedantic-errors \
-	-std=c11 -D_XOPEN_SOURCE=600
+CFLAGS = -g -O0 -Wall -Wextra -pedantic-errors -std=c11
 
 # name for executable
 EXE = stide
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
-LIBS = -L../lib/win_64 -lpthread -ldl -lpng -lz -lm -lsodium
+LIBS = -L../lib/win_64 -lpthread -ldl -lpng -lz -lm
 
 # space-separated list of source files
 SRCS = stide.c helpers.c preprocess.c image.c hide.c \
-	create.c extract.c sqlite3.c
+	create.c extract.c sqlite3.c random.c
 
 # automatically generated list of object files
 OBJS = $(SRCS:.c=.o)

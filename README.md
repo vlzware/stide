@@ -3,6 +3,9 @@
 
 <img src="media/stide_big.png" alt="Stide screenshots" />
 
+#### DISCLAIMER:
+**- Please note that I am neither C guru nor cryptography expert, so use this software at your risk!**
+
 #### MAJOR UPDATE
 - Stide is completely rewritten - now fully modular, single binary, lot more options and better responses.
 - Now beside the 'strict' mode with words only from the dictionary we added support of 'loose' mode - which accepts arbitrary ASCII characters for input, at the cost of compression.
@@ -107,6 +110,8 @@ which has nothing to do with the inserted hidden data. Stide adds --nothing-- to
 
 - Stide uses the stb_image and stb_image_write libraries from: [STB](https://github.com/nothings/stb/).
 
+- For portability stide compiles with the [gnu version](https://www.gnu.org/software/libc/) of random().
+
 - This tool was (originally) made as my final project in [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x).
 
 - The 10 000 words dictionary is from [Josh Kaufman](https://github.com/first20hours/google-10000-english) (I added small number of words at the end like my name and stide_eof) Data files are derived from the Google Web Trillion Word Corpus, as described by Thorsten Brants and Alex Franz, and distributed by the Linguistic Data Consortium. Subsets of this corpus distributed by Peter Novig. Corpus editing and cleanup by Josh Kaufman.
@@ -117,4 +122,4 @@ DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 18.01.2018
+last updated: 20.01.2018
