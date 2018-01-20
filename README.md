@@ -4,22 +4,24 @@
 <img src="media/stide_big.png" alt="Stide screenshots" />
 
 #### DISCLAIMER:
-**- Please note that I am neither C guru nor cryptography expert, so use this software at your risk!**
+**- Please note that I am neither C guru nor a cryptography expert, so use this software at your risk!**
 
 #### MAJOR UPDATE
 - Stide is completely rewritten - now fully modular, single binary, lot more options and better responses.
 - Now beside the 'strict' mode with words only from the dictionary we added support of 'loose' mode - which accepts arbitrary ASCII characters for input, at the cost of compression.
-- Fully backwards compatible (use the '-s' switch for 'strict' mode).
 - The old binaries and GUI can be found in bin/linux/old
 - Changed license to MIT.
 - Name changed because we found some old project on the internet with the same name.
-- Build with sqlite3, zlib and libpng as static libs to be even more easy to use - no dependancies.
+- Build with sqlite3, zlib andlibpng as static libs to be even more easy to use - no dependancies.
+- Windows support (console only).
+- Note: the last version is no more backwards compatible.
 
 #### QUICK START:
-- this works only on 64 bit linux (32 bit Linux / Windows support comes at some point later),
-- [get this archive](https://github.com/vlzware/stide/blob/master/releases/stide_bin_x64_2.1.tar.gz?raw=true)
-- extract the archive and then start stide_gtk,
-- OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling"). Note: the current version is not backwards-compatible.
+- this works only on 64 bit linux or 64 bit Windows (32 bit support comes at some point later),
+- [get this archive for linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x64.tar.gz?raw=true)
+- [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_win_x64.zip?raw=true)
+- extract the archive and then start ``stide`` over the console/power-schell. Note: on linux you can use the gui: stide_gtk,
+- OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
 
 #### for creating image with embedded secret message:
 1. use the **create** tab;
@@ -57,7 +59,9 @@ you can communicate in privacy without even looking suspicious.
 #### 4. Encryption?
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
-#### 5. Compiling:
+#### 5. Compiling on 64 bit systems:
+- Note: Compilation on 32 bit systems should be possible too, although you need first to recompile the static libraries of libpng, zlib (and libdl for windows).
+
 - On windows use MinGW with mingw32-pthreads-w32.
 - Compile with 'make -f [Makefile]' with the proper Makefile for your platform in the 'src' directory. The resulting binaries - stide (and stide_gtk if on linux) reside in 'bin/[platform]'.
 - Stide uses statically builded versions of zlib and libpng.
