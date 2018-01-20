@@ -13,6 +13,7 @@
 - Name changed because we found some old project on the internet with the same name.
 - Build with sqlite3, zlib and libpng as static libs to be even more easy to use - no dependancies.
 - Windows support (console only).
+- Using the Secure random number generator from gnu random();
 - Note: the last version is no more backwards compatible.
 
 #### QUICK START:
