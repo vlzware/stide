@@ -7,12 +7,11 @@
 **- Please note that I am neither C guru nor a cryptography expert, so use this software at your risk!**
 
 #### MAJOR UPDATE
-- Stide is completely rewritten - now fully modular, single binary, lot more options and better responses.
+- Stide is completely rewritten - now portable, fully modular, single binary, lot more options and better responses.
 - Now beside the 'strict' mode with words only from the dictionary we added support of 'loose' mode - which accepts arbitrary ASCII characters for input, at the cost of compression.
-- The old binaries and GUI can be found in bin/linux/old
 - Changed license to MIT.
 - Name changed because we found some old project on the internet with the same name.
-- Build with sqlite3, zlib andlibpng as static libs to be even more easy to use - no dependancies.
+- Build with sqlite3, zlib and libpng as static libs to be even more easy to use - no dependancies.
 - Windows support (console only).
 - Note: the last version is no more backwards compatible.
 
@@ -97,8 +96,8 @@ you can communicate in privacy without even looking suspicious.
 
 #### 7. Limitations/TODO/planed upgrades?
 - The hidden secret is *fragile* - meaning the simplest change to the picture will destroy the payload. Note: this can be also a pro, depending on the situation;
-- No windows binaries or gui (WIP), although you can compile and run all under cygwin;
 - Outputs only png or bmp;
+- ~~No windows binaries~~ or gui (WIP); As of stide_3.0 windows console application available.
 - ~~The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits. In numbers - our example cat.png grows from 66 to 85 kB.~~ Stide switched to libpng, so there is no more png compression penalty on the output.
 - ~~words not in the dictionary are not supported~~ Stide now supports both modes - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
