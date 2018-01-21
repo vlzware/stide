@@ -7,12 +7,19 @@
 **- Please note that I am neither C guru nor cryptography expert, so use this software at your risk!**
 - With that being said taking some precations can get you as close as possible to the unbreakable [one-time pad](https://en.wikipedia.org/wiki/One-time_pad) security:
 -- Follow the usual password guidelines - use a good, long and unique password;
+
 -- Only use unique pictures (i.e. made by you);
+
 -- Do not ever use something made with gimp or drawings with some software - this results to having very less noise in the picture;
+
 -- At best take a picture with your camera;
+
 -- Use each picture only once;
+
 -- Dispose the original picture immediately;
+
 -- The smaller the hidden message the more difficult (if not impossible) is to even detect the noise-looking changes caused by the payload;
+
 - Stide uses only the last single bit in a single color channel in some pixels in a very random looking sequence of color channels and pixels, which leads to theoretically impossible detection - the payload is indistinquishable from random noise. Therefore, detecting or even decyphering the payload should be impossible if the attacker does not have acces to the original picture or the password.
 
 #### MAJOR UPDATE
