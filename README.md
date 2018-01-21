@@ -3,8 +3,17 @@
 
 <img src="media/stide_big.png" alt="Stide screenshots" />
 
-#### DISCLAIMER:
-**- Please note that I am neither C guru nor a cryptography expert, so use this software at your risk!**
+#### SECURITY NOTE
+**- Please note that I am neither C guru nor cryptography expert, so use this software at your risk!**
+- With that being said taking some precations can get you as close as possible to the unbreakable [one-time pad](https://en.wikipedia.org/wiki/One-time_pad) security:
+-- Follow the usual password guidelines - use a good, long and unique password;
+-- Only use unique pictures (i.e. made by you);
+-- Do not ever use something made with gimp or drawings with some software - this results to having very less noise in the picture;
+-- At best take a picture with your camera;
+-- Use each picture only once;
+-- Dispose the original picture immediately;
+-- The smaller the hidden message the more difficult (if not impossible) is to even detect the noise-looking changes caused by the payload;
+- Stide uses only the last single bit in a single color channel in some pixels in a very random looking sequence of color channels and pixels, which leads to theoretically impossible detection - the payload is indistinquishable from random noise. Therefore, detecting or even decyphering the payload should be impossible if the attacker does not have acces to the original picture or the password.
 
 #### MAJOR UPDATE
 - Stide is completely rewritten - now portable, fully modular, single binary, lot more options and better responses.
@@ -13,7 +22,7 @@
 - Name changed because we found some old project on the internet with the same name.
 - Build with sqlite3, zlib and libpng as static libs to be even more easy to use - no dependancies.
 - Windows support (console only).
-- Using the Secure random number generator from gnu random();
+- Using the GNU/BSD secure random number generator random();
 - Note: the last version is no more backwards compatible.
 
 #### QUICK START:
@@ -21,6 +30,7 @@
 - [get this archive for linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x64.tar.gz?raw=true)
 - [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_win_x64.zip?raw=true)
 - extract the archive and then start ``stide`` over the console/power-schell. Note: on linux you can use the gui: stide_gtk,
+
 - OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
 
 #### for creating image with embedded secret message:
@@ -38,9 +48,6 @@
 3. fill in the password
 4. set some switches if you need to;
 5. hit **Go!**
-
-#### SECURITY NOTE:
-- Only use unique pictures (i.e. made by you) and use each picture just once with the same password - this adds a lot to the overall security
 
 ### DESCRIPTION:
 
@@ -60,7 +67,7 @@ you can communicate in privacy without even looking suspicious.
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
 #### 5. Compiling on 64 bit systems:
-- Note: Compilation on 32 bit systems should be possible too, although you need first to recompile the static libraries of libpng, zlib (and libdl for windows).
+- Note: Compilation on 32 bit systems should be possible too, although you need first to recompile the static libraries of libpng and zlib (also libdl for windows).
 
 - On windows use MinGW with mingw32-pthreads-w32.
 - Compile with 'make -f [Makefile]' with the proper Makefile for your platform in the 'src' directory. The resulting binaries - stide (and stide_gtk if on linux) reside in 'bin/[platform]'.
@@ -96,7 +103,7 @@ you can communicate in privacy without even looking suspicious.
 ```
 
 #### 7. Limitations/TODO/planed upgrades?
-- The hidden secret is *fragile* - meaning the simplest change to the picture will destroy the payload. Note: this can be also a pro, depending on the situation;
+- The hidden secret is *fragile* - meaning the simplest change to the picture may destroy the payload. Note: this can be also a pro, depending on the situation;
 - Outputs only png or bmp;
 - ~~No windows binaries~~ or gui (WIP); As of stide_3.0 windows console application available.
 - ~~The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
@@ -126,4 +133,4 @@ DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 20.01.2018
+last updated: 21.01.2018
