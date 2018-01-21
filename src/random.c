@@ -43,7 +43,7 @@
 @deftypefnx Supplement void* setstate (void *@var{arg_state})
 
 Random number functions.  @code{random} returns a random number in the
-range 0 to @code{LONG_MAX}.  @code{srandom} initializes the random
+range 0 to @code{STIDE_LONG_MAX}.  @code{srandom} initializes the random
 number generator to some starting point determined by @var{seed}
 (else, the values returned by @code{random} are always the same for each
 run of the program).  @code{initstate} and @code{setstate} allow fine-grained
@@ -377,7 +377,7 @@ random (void)
 {
   if (rand_type == TYPE_0)
     {
-      state[0] = ((state[0] * 1103515245) + 12345) & LONG_MAX;
+      state[0] = ((state[0] * 1103515245) + 12345) & STIDE_LONG_MAX;
       return state[0];
     }
   else
@@ -385,7 +385,7 @@ random (void)
       long int i;
       *fptr += *rptr;
       /* Chucking least random bit.  */
-      i = (*fptr >> 1) & LONG_MAX;
+      i = (*fptr >> 1) & STIDE_LONG_MAX;
       ++fptr;
       if (fptr >= end_ptr)
 	{

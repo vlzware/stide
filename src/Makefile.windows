@@ -11,7 +11,7 @@ EXE = stide
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
-LIBS = -L../lib/win_64 -lpthread -ldl -lpng -lz -lm
+LIBS = -L../lib/win_32 -lpthread -ldl -lpng -lz -lm
 
 # space-separated list of source files
 SRCS = stide.c helpers.c preprocess.c image.c hide.c \
@@ -23,10 +23,10 @@ OBJS = $(SRCS:.c=.o)
 # default target
 all: stide
 
-stide: $(OBJS) Makefile.win_64
-	$(CC) $(CFLAGS) -o ../bin/win_64/$@ $(OBJS) $(LIBS)
-	cp ../db/stide.db ../bin/win_64/
-	cp ../media/cat.png ../bin/win_64/
+stide: $(OBJS) Makefile.windows
+	$(CC) $(CFLAGS) -o ../bin/windows/$@ $(OBJS) $(LIBS)
+	cp ../db/stide.db ../bin/windows/
+	cp ../media/cat.png ../bin/windows/
 
 # housekeeping
 clean:
@@ -35,5 +35,5 @@ clean:
 # clear everything
 cleanall:
 	rm -f core $(EXE) *.o *.gch
-	rm -f ../bin/win_64/stide*
-	rm -f ../bin/win_64/*.png
+	rm -f ../bin/windows/stide*
+	rm -f ../bin/windows/*.png

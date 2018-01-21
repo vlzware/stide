@@ -46,9 +46,9 @@ uint32_t hash(const char *str)
 long rand_at_most(long max)
 {
 	unsigned long
-		/* max <= LONG_MAX < ULONG_MAX, so this is okay. */
+		/* max <= STIDE_LONG_MAX < ULONG_MAX, so this is okay. */
 		num_bins = (unsigned long) max + 1,
-		num_rand = (unsigned long) LONG_MAX + 1,
+		num_rand = (unsigned long) STIDE_LONG_MAX + 1,
 		bin_size = num_rand / num_bins,
 		defect   = num_rand % num_bins;
 

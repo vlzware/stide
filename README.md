@@ -27,9 +27,9 @@ With that being said taking some precations can get you as close as possible to 
 - Note: the last version is no more backwards compatible.
 
 #### QUICK START:
-- this works only on 64 bit linux or 64 bit Windows (32 bit support comes at some point later),
+- this works only on 64 bit Linux or 32/64 bit Windows (32 bit Linux support comes at some point later),
 - [get this archive for linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x64.tar.gz?raw=true)
-- [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_win_x64.zip?raw=true)
+- [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_win.zip?raw=true)
 - extract the archive and then start ``stide`` over the console/power-schell. Note: on linux you can use the gui: stide_gtk,
 
 - OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
@@ -67,10 +67,10 @@ you can communicate in privacy without even looking suspicious.
 #### 4. Encryption?
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
-#### 5. Compiling on 64 bit systems:
-- Note: Compilation on 32 bit systems should be possible too, although you need first to recompile the static libraries of libpng and zlib (also libdl for windows).
+#### 5. Compiling:
+- Note: Included are Linux 64 and windows 32 bit versions of libpng, zlib and (windows 32) libdl. Compilation on other platforms should be possible too, although you need first to recompile the static libraries of libpng and zlib (also libdl for windows).
 
-- On windows use MinGW with mingw32-pthreads-w32.
+- On windows use MinGW 32 with mingw32-pthreads-w32.
 - Compile with 'make -f [Makefile]' with the proper Makefile for your platform in the 'src' directory. The resulting binaries - stide (and stide_gtk if on linux) reside in 'bin/[platform]'.
 - Stide uses statically builded versions of zlib and libpng.
 - sqlite3 source and headers are also compiled.
@@ -106,7 +106,7 @@ you can communicate in privacy without even looking suspicious.
 #### 7. Limitations/TODO/planed upgrades?
 - The hidden secret is *fragile* - meaning the simplest change to the picture may destroy the payload. Note: this can be also a pro, depending on the situation;
 - Outputs only png or bmp;
-- ~~No windows binaries~~ or gui (WIP); As of stide_3.0 windows console application available.
+- ~~No windows binaries~~ or gui (WIP); As of stide_3.0 windows 32 bit console application available.
 - ~~The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits. In numbers - our example cat.png grows from 66 to 85 kB.~~ Stide switched to libpng, so there is no more png compression penalty on the output.
 - ~~words not in the dictionary are not supported~~ Stide now supports both modes - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
