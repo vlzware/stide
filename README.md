@@ -29,7 +29,7 @@ With that being said taking some precations can get you as close as possible to 
 #### QUICK START:
 - this works only on 64 bit Linux or 32/64 bit Windows (32 bit Linux support comes at some point later),
 - [get this archive for linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x64.tar.gz?raw=true)
-- [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_win.zip?raw=true)
+- [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_windows.zip?raw=true)
 - extract the archive and then start ``stide`` over the console/power-schell. Note: on linux you can use the gui: stide_gtk,
 
 - OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
