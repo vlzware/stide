@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/wait.h>
 
 #define _GNU_SOURCE
 int asprintf(char **strp, const char *fmt, ...);
@@ -297,6 +298,7 @@ void execute(char *com, int mode)
 {
 	FILE *in;
 	extern FILE *popen();
+	extern int pclose();
 	char buff[2048];
 
 	if (!(in = popen(com, "r"))) {

@@ -23,10 +23,10 @@ OBJS = $(SRCS:.c=.o)
 # default target
 all: stide
 
-stide: $(OBJS) Makefile.windows
-	$(CC) $(CFLAGS) -o ../bin/windows/$@ $(OBJS) $(LIBS)
-	cp ../db/stide.db ../bin/windows/
-	cp ../media/cat.png ../bin/windows/
+stide: $(OBJS) Makefile.windows_32
+	$(CC) $(CFLAGS) -o ../bin/windows_32/$@ $(OBJS) $(LIBS)
+	cp ../db/stide.db ../bin/windows_32/
+	cp ../media/cat.png ../bin/windows_32/
 
 # housekeeping
 clean:
@@ -35,5 +35,5 @@ clean:
 # clear everything
 cleanall:
 	rm -f core $(EXE) *.o *.gch
-	rm -f ../bin/windows/stide*
-	rm -f ../bin/windows/*.png
+	rm -f ../bin/windows_32/stide*
+	rm -f ../bin/windows_32/*.png
