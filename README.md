@@ -22,13 +22,13 @@ With that being said taking some precations can get you as close as possible to 
 - Changed license to MIT.
 - Name changed because we found some old project on the internet with the same name.
 - Build with sqlite3, zlib and libpng as static libs to be even more easy to use - no dependancies.
-- Windows support (console only).
+- Prebuilt Linux/Windows binaries (Windows currently console only).
 - Using the GNU/BSD secure random number generator random();
 - Note: the last version is no more backwards compatible.
 
 #### QUICK START:
-- this works only on 64 bit Linux or 32/64 bit Windows (32 bit Linux support comes at some point later),
-- [get this archive for linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x64.tar.gz?raw=true)
+- [get this archive for 64 bit linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x64.tar.gz?raw=true)
+- [get this archive for 32 bit linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x32.tar.gz?raw=true)
 - [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_windows.zip?raw=true)
 - extract the archive and then start ``stide`` over the console/power-schell. Note: on linux you can use the gui: stide_gtk,
 
@@ -68,12 +68,12 @@ you can communicate in privacy without even looking suspicious.
 - Stide uses stream encryption based on PRNG, which is seeded by the hash of the password. The encryption gets applied to the hiding route, the color channel and on the secret data itself.
 
 #### 5. Compiling:
-- Note: Included are Linux 64 and windows 32 bit versions of libpng, zlib and (windows 32) libdl. Compilation on other platforms should be possible too, although you need first to recompile the static libraries of libpng and zlib (also libdl for windows).
+- Note: Included are Linux 32/64 and windows 32 bit versions of libpng, zlib and (windows 32) libdl. Compilation on other platforms should be possible too, although you need first to recompile the static libraries of libpng and zlib (also libdl for windows).
+- If not already available install build tools and gtk headers:
+```sudo apt-get install build-essential libgtk-3-dev```
 
 - On windows use MinGW 32 with mingw32-pthreads-w32.
 - Compile with 'make -f [Makefile]' with the proper Makefile for your platform in the 'src' directory. The resulting binaries - stide (and stide_gtk if on linux) reside in 'bin/[platform]'.
-- Stide uses statically builded versions of zlib and libpng.
-- sqlite3 source and headers are also compiled.
 - Here is the complete output of 'ldd stide':
 ```
 	linux-vdso.so.1 =>  (0x00007ffc7b77e000)
@@ -134,4 +134,4 @@ DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 21.01.2018
+last updated: 25.01.2018
