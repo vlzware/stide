@@ -1,0 +1,85 @@
+﻿<Window x:Class="stide_gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:stide_gui"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="Stide" Height="629.667" Width="530">
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Height="601" VerticalAlignment="Top" Width="530">
+            <TabItem Header="Create">
+                <Grid Background="#FFE5E5E5" Margin="0,0,0,0">
+                    <Label Content="Message:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <TextBox Name="msg" ToolTip="Message to hide" HorizontalAlignment="Left" Height="20" Margin="74,14,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="427"/>
+
+                    <Label Content="Password:" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.516,-0.192"/>
+                    <TextBox Name="pass_c" ToolTip="Password" HorizontalAlignment="Left" Height="20" Margin="74,39,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="427"/>
+
+                    <TextBox Name="img_c_in" ToolTip="Input image" HorizontalAlignment="Left" Height="20" Margin="10,67,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="135"/>
+                    <Button Click="img_c_in_click" Content="..." HorizontalAlignment="Left" Margin="150,67,0,0" VerticalAlignment="Top" Width="20"/>
+
+                    <TextBox Name="img_c_out" ToolTip="Output image (default: 'out.png')" HorizontalAlignment="Left" Height="20" Margin="175,67,0,0" TextWrapping="NoWrap" Text="out.png" VerticalAlignment="Top" Width="135"/>
+                    <Button Click="img_c_out_click" Content="..." HorizontalAlignment="Left" Margin="315,67,0,0" VerticalAlignment="Top" Width="20"/>
+
+                    <TextBox Name="db_c" ToolTip="Path to database (default 'stide.db')" HorizontalAlignment="Left" Height="20" Margin="340,67,0,0" TextWrapping="NoWrap" Text="stide.db" VerticalAlignment="Top" Width="135"/>
+                    <Button Click="db_c_click"  Content="..." HorizontalAlignment="Left" Margin="481,67,0,0" VerticalAlignment="Top" Width="20"/>
+
+                    <ComboBox ToolTip="Operation mode" Name="strict_c" SelectedIndex="1" SelectionChanged="strict_c_set" HorizontalAlignment="Left" Margin="50,92,0,0" VerticalAlignment="Top" Width="120">
+                        <ComboBoxItem>loose</ComboBoxItem>
+                        <ComboBoxItem>strict</ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox ToolTip="Level of verbosity" Name="verbose_c" SelectedIndex="1" SelectionChanged="verbose_c_set" HorizontalAlignment="Left" Margin="190,92,0,0" VerticalAlignment="Top" Width="120">
+                        <ComboBoxItem>silent</ComboBoxItem>
+                        <ComboBoxItem>verbose</ComboBoxItem>
+                        <ComboBoxItem>debug</ComboBoxItem>
+                    </ComboBox>
+
+                    <CheckBox Checked="check_p" Unchecked="uncheck_p" ToolTip="Do not hide, just print the distribution on the image." Content="print" HorizontalAlignment="Left" Margin="340,96,0,0" VerticalAlignment="Top"/>
+
+                    <Button ToolTip="Work!" Content="Go!" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="491" Click="check_fields_c" Height="25"/>
+
+                    <ScrollViewer HorizontalAlignment="Left" Height="357" Margin="10,190,0,0" VerticalAlignment="Top" Width="491">
+                        <TextBlock x:Name="console_c" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="460"/>
+                    </ScrollViewer>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Extract">
+                <Grid Background="#FFE5E5E5" Margin="0,0,0,0">
+                    <Label Content="Password:" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.516,-0.192"/>
+                    <TextBox Name="pass_e" ToolTip="Password" HorizontalAlignment="Left" Height="20" Margin="74,39,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="427"/>
+
+                    <TextBox Name="img_e" ToolTip="Input image" HorizontalAlignment="Left" Height="20" Margin="80,67,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="135"/>
+                    <Button Click="img_e_click" Content="..." HorizontalAlignment="Left" Margin="220,67,0,0" VerticalAlignment="Top" Width="20"/>
+
+                    <TextBox Name="db_e" ToolTip="Path to database (default 'stide.db')" HorizontalAlignment="Left" Height="20" Margin="266,67,0,0" TextWrapping="NoWrap" Text="stide.db" VerticalAlignment="Top" Width="135"/>
+                    <Button Click="db_e_click"  Content="..." HorizontalAlignment="Left" Margin="406,67,0,0" VerticalAlignment="Top" Width="20"/>
+
+                    <ComboBox ToolTip="Operation mode" Name="strict_e" SelectedIndex="1" SelectionChanged="strict_e_set" HorizontalAlignment="Left" Margin="120,92,0,0" VerticalAlignment="Top" Width="120">
+                        <ComboBoxItem>loose</ComboBoxItem>
+                        <ComboBoxItem>strict</ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox ToolTip="Level of verbosity" Name="verbose_e" SelectedIndex="1" SelectionChanged="verbose_e_set" HorizontalAlignment="Left" Margin="266,92,0,0" VerticalAlignment="Top" Width="120">
+                        <ComboBoxItem>silent</ComboBoxItem>
+                        <ComboBoxItem>verbose</ComboBoxItem>
+                        <ComboBoxItem>debug</ComboBoxItem>
+                    </ComboBox>
+
+                    <Button ToolTip="Work!" Content="Go!" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="491" Click="check_fields_e" Height="25"/>
+
+                    <ScrollViewer HorizontalAlignment="Left" Height="357" Margin="10,190,0,0" VerticalAlignment="Top" Width="491">
+                        <TextBlock x:Name="console_e" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="452"/>
+                    </ScrollViewer>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="About">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Text="This is the GUI frontend to Stide." VerticalAlignment="Top" Height="24" Width="364" Margin="0,40,0,0"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

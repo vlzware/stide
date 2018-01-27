@@ -22,17 +22,18 @@ With that being said taking some precations can get you as close as possible to 
 - Changed license to MIT.
 - Name changed because we found some old project on the internet with the same name.
 - Build with sqlite3, zlib and libpng as static libs to be even more easy to use - no dependancies.
-- Prebuilt Linux/Windows binaries (Windows currently console only).
+- Prebuilt Linux/Windows binaries and GUI.
 - Using the GNU/BSD secure random number generator random();
 - Note: the last version is no more backwards compatible.
 
 #### QUICK START:
-- [get this archive for 64 bit linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x64.tar.gz?raw=true)
-- [get this archive for 32 bit linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_linux_x32.tar.gz?raw=true)
-- [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.0_windows.zip?raw=true)
-- extract the archive and then start ``stide`` over the console/power-schell. Note: on linux you can use the gui: stide_gtk,
+- [get this archive for 64 bit linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.1_linux_x64.tar.gz?raw=true)
+- [get this archive for 32 bit linux](https://github.com/vlzware/stide/blob/master/releases/stide_3.1_linux_x32.tar.gz?raw=true)
+- [get this archive for windows](https://github.com/vlzware/stide/blob/master/releases/stide_3.1_windows.zip?raw=true)
+- extract the archive;
+- start ``stide_gtk`` (on linux) or ``stide_gui.exe`` (on windows) or use direct ``stide`` from the console/power-schell.
 
-- OR for **the latest and greatest** version clone the repository and compile by yourself (see "Compiling").
+- OR for the latest development version clone the repository and compile by yourself (see "Compiling").
 
 #### for creating image with embedded secret message:
 1. use the **create** tab;
@@ -69,12 +70,11 @@ you can communicate in privacy without even looking suspicious.
 
 #### 5. Compiling:
 - Note: Included are Linux 32/64 and windows 32 bit versions of libpng, zlib and (windows 32) libdl. Compilation on other platforms should be possible too, although you need first to recompile the static libraries of libpng and zlib (also libdl for windows).
-- If not already available install build tools and gtk headers:
+- On linux if not already available install build tools and gtk headers:
 ```sudo apt-get install build-essential libgtk-3-dev```
-
-- On windows use MinGW 32 with mingw32-pthreads-w32.
+- On windows use MinGW 32 with mingw32-pthreads-w32. Also you need Visual Studio for the GUI.
 - Compile with 'make -f [Makefile]' with the proper Makefile for your platform in the 'src' directory. The resulting binaries - stide (and stide_gtk if on linux) reside in 'bin/[platform]'.
-- Here is the complete output of 'ldd stide':
+- Here is the complete output of 'ldd stide' on Linux:
 ```
 	linux-vdso.so.1 =>  (0x00007ffc7b77e000)
 	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007efffb37e000)
@@ -85,7 +85,7 @@ you can communicate in privacy without even looking suspicious.
 
 ```
 - 'stide.glade' is a .xml file for the GUI settings;
-- 'stide_gtk' is the gtk gui executable - this is basically just an interface to the command line tool.
+- 'stide_gtk' (linux) and 'stide_gui.exe' (windows) are the GUIs - basically just an interface to the command line tool.
 
 #### 6. Command line usage:
 ```
@@ -106,7 +106,7 @@ you can communicate in privacy without even looking suspicious.
 #### 7. Limitations/TODO/planed upgrades?
 - The hidden secret is *fragile* - meaning the simplest change to the picture may destroy the payload. Note: this can be also a pro, depending on the situation;
 - Outputs only png or bmp;
-- ~~No windows binaries~~ or gui (WIP); As of stide_3.0 windows 32 bit console application available.
+- ~~No windows binaries or gui (WIP)~~~; As of stide_3.0 windows 32 bit GUI and console application available.
 - ~~The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits. In numbers - our example cat.png grows from 66 to 85 kB.~~ Stide switched to libpng, so there is no more png compression penalty on the output.
 - ~~words not in the dictionary are not supported~~ Stide now supports both modes - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
@@ -134,4 +134,4 @@ DISCLAIMER:
  Use this software at your own risk.
 
 
-last updated: 25.01.2018
+last updated: 27.01.2018
