@@ -226,8 +226,10 @@ void check_fields_c(void)
 		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *cmd = NULL;       /* -s -p -v -f db  pass   msg   in out */
-	asprintf(&cmd, "./stide -c %s %s %s -f %s \"%s\" \"%s\" %s %s 2>&1",
+	char *cmd = NULL;
+	asprintf(&cmd,
+		         /* -s -p -v -f   db   pass    msg     in    out */
+		"./stide -c %s %s %s -f \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" 2>&1",
 		_strict_c,
 		_p,
 		_verbose_c,
@@ -254,8 +256,8 @@ void check_fields_e(void)
 		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *cmd = NULL;       /* -s -v -f db  pass  in */
-	asprintf(&cmd, "./stide -e %s %s -f %s \"%s\" %s 2>&1",
+	char *cmd = NULL;       /* -s -v -f   db    pass   in */
+	asprintf(&cmd, "./stide -e %s %s -f \"%s\" \"%s\" \"%s\" 2>&1",
 		_strict_e,
 		_verbose_e,
 		gtk_entry_get_text(db_e),
