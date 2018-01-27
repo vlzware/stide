@@ -45,8 +45,6 @@ char *_strict_c = "-s";
 char *_strict_e = "-s";
 char *_verbose_c = "-v";
 char *_verbose_e = "-v";
-char *_debug_c = " ";
-char *_debug_e = " ";
 char *_p = " ";
 
 
@@ -228,12 +226,11 @@ void check_fields_c(void)
 		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *cmd = NULL;       /* -s -p -v -d -f db  pass   msg   in out */
-	asprintf(&cmd, "./stide -c %s %s %s %s -f %s \"%s\" \"%s\" %s %s 2>&1",
+	char *cmd = NULL;       /* -s -p -v -f db  pass   msg   in out */
+	asprintf(&cmd, "./stide -c %s %s %s -f %s \"%s\" \"%s\" %s %s 2>&1",
 		_strict_c,
 		_p,
 		_verbose_c,
-		_debug_c,
 		gtk_entry_get_text(db_c),
 		gtk_entry_get_text(pass_c),
 		gtk_entry_get_text(msg),
@@ -257,11 +254,10 @@ void check_fields_e(void)
 		alert("All input fields are required!", GTK_MESSAGE_ERROR);
 		return;
 	}
-	char *cmd = NULL;       /* -s -v -d -f db  pass  in */
-	asprintf(&cmd, "./stide -e %s %s %s -f %s \"%s\" %s 2>&1",
+	char *cmd = NULL;       /* -s -v -f db  pass  in */
+	asprintf(&cmd, "./stide -e %s %s -f %s \"%s\" %s 2>&1",
 		_strict_e,
 		_verbose_e,
-		_debug_e,
 		gtk_entry_get_text(db_e),
 		gtk_entry_get_text(pass_e),
 		gtk_entry_get_text(img_e));
