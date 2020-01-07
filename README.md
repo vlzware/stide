@@ -106,7 +106,7 @@ you can communicate in privacy without even looking suspicious.
 #### 7. Limitations/TODO/planed upgrades?
 - The hidden secret is *fragile* - meaning the simplest change to the picture may destroy the payload. Note: this can be also a pro, depending on the situation;
 - Outputs only png or bmp;
-- ~~No windows binaries or gui (WIP)~~~; As of stide_3.0 windows 32 bit GUI and console application available.
+- ~~No windows binaries or gui (WIP)~~; As of stide_3.0 windows 32 bit GUI and console application available.
 - ~~The used png compression is not optimal (WIP) and this can lead to somewhat bigger output
 which has nothing to do with the inserted hidden data. Stide adds --nothing-- to the file just changes some bits. In numbers - our example cat.png grows from 66 to 85 kB.~~ Stide switched to libpng, so there is no more png compression penalty on the output.
 - ~~words not in the dictionary are not supported~~ Stide now supports both modes - words only from the dictionary ('strict' mode) and 'loose' mode with arbitrary ASCII characters.
